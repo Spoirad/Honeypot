@@ -1,0 +1,30 @@
+# --- Entorno virtual ---
+venv/
+.env/
+__pycache__/
+*.pyc
+*.pyo
+*.pyd
+*.pytest_cache/
+
+# --- Claves SSH ---
+server.key
+server.key.pub
+
+# --- Archivos de logs ---
+*.log
+
+# --- Archivos temporales ---
+*.tmp
+*.bak
+*.swp
+.DS_Store
+Thumbs.db
+
+# --- Configuración local ---
+.idea/
+.vscode/
+*.code-workspace
+
+# --- Archivos del sistema ---
+desktop.ini
