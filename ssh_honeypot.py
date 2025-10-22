@@ -1,4 +1,4 @@
-# ------Libraries------
+# ------Librerias------
 
 import logging
 from logging.handlers import RotatingFileHandler
@@ -6,12 +6,13 @@ import socket
 import paramiko #pure python implement de SSHv2 (server y client)
 import threading #manejo de threads para poner manejar varios client con el server
 
-# ------Contanst------ 
+# ------Contantes------ 
 logging_format = logging.Formatter('%(message)s')
 SSH_BANNER = "SSH-2.0-SSHServer_1.0"
 
 #host_key = 'server.key' # private key  [Debe mantenerse secreto o en local]
 host_key = paramiko.RSAKey(filename='server.key')
+
 # ------Loggers & Logging Files------
 
 
@@ -21,7 +22,7 @@ funnel_logger = logging.getLogger('FunnelLogger')
 funnel_logger.setLevel(logging.INFO)
 
 #handler --> provides options so it sets the format. where we are going to log
-funnel_handler = RotatingFileHandler('audits.log', maxBytes=2000, backupCount=5)  #setting para el funnel logger, tb crea el audits
+funnel_handler = RotatingFileHandler('ssh_audits.log', maxBytes=2000, backupCount=5)  #setting para el funnel logger, tb crea el audits
 funnel_handler.setFormatter(logging_format)
 
 # se las ponemos al logger 
@@ -91,7 +92,7 @@ class Server(paramiko.ServerInterface):  # clase que implementa los callbacks qu
         self.input_username = input_username
         self.input_password = input_password
 
-    def check_channel_request(self, kind, chanid: int) -> int:
+    def check_channel_request(self, kind, chanid):
         if kind == 'session':
             return paramiko.OPEN_SUCCEEDED # acepta solicitudes de canal tipo "session" (abrir shell)
 
@@ -159,7 +160,7 @@ def client_handle(client, addr, username , password):
         # inicia la shell
         emulated_shell(channel, client_ip=client_ip)
 
-    except AttributeError as error: # Captura errores de la conexión o del transporte
+    except Exception as error: # Captura errores de la conexión o del transporte
         print(error)
 
     finally:
@@ -182,7 +183,7 @@ def honeypot(address, port, username, password):
     sock.setsockopt(socket.SOL_SOCKET, socket.SO_REUSEADDR, 1)
 
     sock.bind((address, port))  
-
+    #soprta hasta 100 conexiones
     sock.listen(100)
 
     print(f"SSH server is listening on port {port}. ")
@@ -197,5 +198,5 @@ def honeypot(address, port, username, password):
 
 
 
-honeypot('127.0.0.1', 2223, "username", "password")
+#honeypot('127.0.0.1', 2223, "username", "password")
 #honeypot('127.0.0.1', 2223, username=None, password=None)
