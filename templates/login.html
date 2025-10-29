@@ -1,21 +1,80 @@
 <!doctype html>
 <html lang="es">
+
 <head>
   <meta charset="utf-8" />
   <meta name="viewport" content="width=device-width,initial-scale=1" />
   <title>Iniciar sesión</title>
   <style>
     /* Estilo minimalista y neutro para parecer una página de login real */
-    body { font-family: Arial, Helvetica, sans-serif; background: #f5f5f5; margin: 0; display:flex; align-items:center; justify-content:center; height:100vh; }
-    .card { background: #ffffff; padding: 20px 24px; border-radius: 6px; box-shadow: 0 4px 12px rgba(0,0,0,0.06); width:320px; }
-    h1 { font-size:18px; margin: 0 0 12px 0; text-align:center; }
-    label { font-size:13px; display:block; margin-top:10px; }
-    input[type="text"], input[type="password"] { width:100%; padding:8px 10px; margin-top:6px; box-sizing:border-box; border:1px solid #ccc; border-radius:4px; }
-    button { width:100%; margin-top:16px; padding:10px; border:none; border-radius:4px; background:#2d8cff; color:#fff; font-weight:600; cursor:pointer;}
-    .notice { font-size:12px; color:#666; margin-top:10px; text-align:center; }
-    .response { font-size:13px; margin-top:8px; text-align:center; color:#333; }
+    body {
+      font-family: Arial, Helvetica, sans-serif;
+      background: #f5f5f5;
+      margin: 0;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      height: 100vh;
+    }
+
+    .card {
+      background: #ffffff;
+      padding: 20px 24px;
+      border-radius: 6px;
+      box-shadow: 0 4px 12px rgba(0, 0, 0, 0.06);
+      width: 320px;
+    }
+
+    h1 {
+      font-size: 18px;
+      margin: 0 0 12px 0;
+      text-align: center;
+    }
+
+    label {
+      font-size: 13px;
+      display: block;
+      margin-top: 10px;
+    }
+
+    input[type="text"],
+    input[type="password"] {
+      width: 100%;
+      padding: 8px 10px;
+      margin-top: 6px;
+      box-sizing: border-box;
+      border: 1px solid #ccc;
+      border-radius: 4px;
+    }
+
+    button {
+      width: 100%;
+      margin-top: 16px;
+      padding: 10px;
+      border: none;
+      border-radius: 4px;
+      background: #2d8cff;
+      color: #fff;
+      font-weight: 600;
+      cursor: pointer;
+    }
+
+    .notice {
+      font-size: 12px;
+      color: #666;
+      margin-top: 10px;
+      text-align: center;
+    }
+
+    .response {
+      font-size: 13px;
+      margin-top: 8px;
+      text-align: center;
+      color: #333;
+    }
   </style>
 </head>
+
 <body>
   <div class="card">
     <h1>Acceso al portal</h1>
@@ -38,7 +97,7 @@
   <script>
     // JS ligero: intercepta el submit para mostrar una respuesta y evitar redirecciones
     // (pero el navegador igualmente hará el POST si el honeypot implementa /login)
-    document.getElementById('loginForm').addEventListener('submit', function(e) {
+    document.getElementById('loginForm').addEventListener('submit', function (e) {
       // evita comportamiento por defecto si quieres simular respuesta por JS
       // si prefieres que el backend reciba el POST, comenta la siguiente linea
       // e.preventDefault();
@@ -51,4 +110,5 @@
     });
   </script>
 </body>
+
 </html>

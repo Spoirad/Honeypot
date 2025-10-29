@@ -1,58 +1,54 @@
+# web_honeypot.py
 # ----- Librerias -----
 import logging
 from logging.handlers import RotatingFileHandler
-from flask import Flask, render_template, request, redirect, url_for
-
+from flask import Flask, render_template, request
 
 # ----- Logging -----
-
 logging_format = logging.Formatter('%(asctime)s %(message)s')
 
 # ----- HTTP Logger -----
-
 http_logger = logging.getLogger('FunnelLogger')
 http_logger.setLevel(logging.INFO)
-http_handler = RotatingFileHandler('http_audits.log', maxBytes=2000, backupCount=5)
+http_handler = RotatingFileHandler('logs/http_audits.log', maxBytes=10 * 1024 * 1024, backupCount=5)
 http_handler.setFormatter(logging_format)
 http_logger.addHandler(http_handler)
 
-# ----- Honeypot -----
-
+# ----- Honeypot Web (Flask) -----
 def web_honeypot(input_username="admin", input_password="password"):
     app = Flask(__name__)
 
-    @app.route('/')
-
+    # pagina de login
+    @app.route("/", methods=["GET"])
     def index():
-        return render_template('login.html')
-    
-    @app.route('/login.html', methods=['POST'])
+        # flask buscara login.html en la carpeta templates/
+        return render_template("login.html")
 
-
+    # endpoint que recibe el POST del formulario de login
+    @app.route("/login", methods=["POST"])
     def login():
-        username = request.form['username']
-        password = request.form['password'] 
-
+        username = request.form.get("username", "")
+        password = request.form.get("password", "")
         ip_address = request.remote_addr
+        user_agent = request.headers.get("User-Agent", "")
 
-        http_logger.info(f'Cliente con IP:  {ip_address} accedio con credenciales: {username}, {password}')
+        # dejar en los logs el intento 
+        http_logger.info(f'login_attempt ip={ip_address} user="{username}" pass="{password}" ua="{user_agent}"')
 
+        # simular fallo si no coincide
         if username == input_username and password == input_password:
-            # Respuesta simple de éxito (puedes personalizar)
-            #return render_template("login_success.html"), 200
-            return "Usuario o contraseña correctos"
+            # exito
+            return render_template("login_success.html"), 200
         else:
-            # volver al login con mensaje de fallo (código 401 para simular autenticación fallida)
-            #return render_template("login.html", error="Usuario o contraseña incorrectos"), 401
-            return "Usuario o contraseña incorrectos"
+            # fallo (código 401 para simular autenticación fallida)
+            return render_template("login.html", error="Usuario o contraseña incorrectos"), 401
 
     return app
-    
-def run_henoypot(port = 5000,input_username="admin", input_password="password"):
-    run_app = web_honeypot(input_username, input_password)
-    run_app.run(debug=True, port=port, host='0.0.0.0')
 
-    return run_app
+def run_web_honeypot(port=5000, input_username="admin", input_password="password", host="0.0.0.0", debug=False):
+    app = web_honeypot(input_username, input_password)
+    app.run(host=host, port=port, debug=debug)
 
-#prueba
-run_henoypot(port=5000, input_username='admin', input_password='admin')
+# añadido para pruebas (evita arranque automatico al importar)
+if __name__ == "__main__":
+    run_web_honeypot(port=5000, input_username="admin", input_password="admin", debug=False)

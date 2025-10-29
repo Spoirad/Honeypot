@@ -4,50 +4,85 @@
 import argparse
 import threading
 import time
-from ssh_honeypot import *   # importa solo la función pública que inicia el honeypot
-
+import sys
+from ssh_honeypot import run_ssh_honeypot   # importa solo la función pública que inicia el honeypot
+from web_honeypot import run_web_honeypot 
 # ----- Argumentos -----
 
-#def run_ssh(address, port, username, password):
-#    # wrapper que llama a tu función honeypot (bloqueante)
-#    honeypot(address, port, username, password)
+def start_thread(target, *args, name=None):
+    """Helper: lanzar target(...) en un hilo daemon y devolver el objeto Thread."""
+    t = threading.Thread(target=target, args=args, daemon=True, name=name)
+    t.start()
+    return t
 
 
-if __name__ == "__main__":
+def main():
 
     parser = argparse.ArgumentParser(description="Controlador de honeypots")
-    parser.add_argument('-a', '--address', type=str, required=True)
-    parser.add_argument('-p', '--port', type=int, required=True)
+    parser.add_argument('-a', '--address', type=str, default="0.0.0.0", help="IP donde escuchar (SSH)")
+    parser.add_argument('-p', '--port', type=int, default=2223, help="Puerto SSH o Web (según el servicio)")
     parser.add_argument('-u', '--username', type=str, default=None)
     parser.add_argument('-pw', '--password', type=str, default=None)
     parser.add_argument('-s', '--ssh', action="store_true", help="Arrancar honeypot SSH")
     parser.add_argument('-w', '--web', action="store_true", help="Arrancar honeypot web")
-
+    parser.add_argument('--web-port', type=int, default=8080, help="Puerto para el honeypot web (si -w)")
     args = parser.parse_args()
+
+
+    threads = {}
 
     try:
         if args.ssh:
-            print("SSH Honeypot activado")
-            # arrancar el honeypot en un hilo daemon para no bloquear la terminal principal
-            honeypot(args.address, args.port, args.username, args.password)
+            print("Arrancando SSH honeypot...")
+            # Lanza la función blocking `ssh_honeypot(address, port, username, password)` en hilo
+            t_ssh = start_thread(run_ssh_honeypot, args.address, args.port, args.username, args.password, name="SSH-Honeypot")
+            threads['ssh'] = t_ssh
+            print(f"SSH honeypot arrancado en hilo (escuchando en {args.address}:{args.port}).")
 
-            #thread_ssh = threading.Thread(target=run_ssh,args=(args.address, args.port, args.username, args.password), daemon=True)
-            #thread_ssh.start()
+        if args.web:
+            print("Arrancando Web honeypot...")
+            # run_web_honeypot puede tener firma (port, user, pass, host). Ajusta si tu función difiere.
+            t_web = start_thread(run_web_honeypot, args.web_port, args.username or "admin", args.password or "password", "0.0.0.0", name="WEB-Honeypot")
+            threads['web'] = t_web
+            print(f"Web honeypot arrancado en hilo (escuchando en 0.0.0.0:{args.web_port}).")
 
-            #print("Honeypot SSH arrancado en hilo. Usa Ctrl+C para parar.")
+        if not threads:
+            print("No se inició ningún honeypot. Usa -s/--ssh o -w/--web.")
+            return
 
-        elif args.web:
-            print("WEB Honeypot activado")
-            # Aquí pondrías la llamada al honeypot web
+        # Bucle interactivo simple para controlar
+        print("\nControl console: escribe 'status', 'stop <ssh|web|all>' o 'exit'")
+        while True:
+            cmd = input("> ").strip().lower()
+            if cmd in ("exit", "quit"):
+                print("Saliendo y deteniendo honeypots (los hilos daemon se cerrarán con el proceso)...")
+                break
+            if cmd == "status":
+                for k, th in threads.items():
+                    alive = "alive" if th.is_alive() else "stopped"
+                    print(f"- {k}: {alive}")
+                continue
+            if cmd.startswith("stop"):
+                parts = cmd.split()
+                if len(parts) == 1 or parts[1] == "all":
+                    print("Parando todos (termina el proceso principal)...")
+                    break
+                target = parts[1]
+                if target in threads:
+                    # Los hilos son daemon; no hay 'stop' inmediato. Informar al usuario.
+                    print(f"Nota: los hilos son daemon; para detener {target} puedes salir del controlador (exit).")
+                else:
+                    print("Nombre de servicio desconocido. Opciones: " + ", ".join(threads.keys()))
+                continue
 
-            print("Funcionalidad web no implementada aún.")
-        else:
-            # evita el uso de backslash sin escape en cadenas
-            print("Tipo de Honeypot no especificado (-s/--ssh o -w/--web).")
+            print("Comando no reconocido. Usa 'status', 'stop <ssh|web|all>' o 'exit'.")
 
     except KeyboardInterrupt:
-        print("\nDetención solicitada por usuario. Cerrando...")
-    except Exception as e:
-        print("Error inesperado:", e)
+        print("\nCtrl+C detectado. Terminando...")
     finally:
-        print("Proceso finalizado.")
+        # Salida limpia: como los hilos son daemon, el proceso terminará y los hilos se cerrarán.
+        print("Controlador finalizado.")
+        sys.exit(0)
+
+if __name__ == "__main__":
+    main()

@@ -7,7 +7,7 @@ import paramiko #pure python implement de SSHv2 (server y client)
 import threading #manejo de threads para poner manejar varios client con el server
 
 # ------Contantes------ 
-logging_format = logging.Formatter('%(message)s')
+logging_format = logging.Formatter('%(asctime)s %(message)s')
 SSH_BANNER = "SSH-2.0-SSHServer_1.0"
 
 #host_key = 'server.key' # private key  [Debe mantenerse secreto o en local]
@@ -22,7 +22,7 @@ funnel_logger = logging.getLogger('FunnelLogger')
 funnel_logger.setLevel(logging.INFO)
 
 #handler --> provides options so it sets the format. where we are going to log
-funnel_handler = RotatingFileHandler('ssh_audits.log', maxBytes=2000, backupCount=5)  #setting para el funnel logger, tb crea el audits
+funnel_handler = RotatingFileHandler('logs/ssh_audits.log', maxBytes=10 * 1024 * 1024, backupCount=5)  #setting para el funnel logger, tb crea el audits
 funnel_handler.setFormatter(logging_format)
 
 # se las ponemos al logger 
@@ -31,7 +31,7 @@ funnel_logger.addHandler(funnel_handler)
 # creamos otro para capturar la shell emulada, es lo mismo pero para capturar los datos de otro sitio.
 creds_logger = logging.getLogger('CredsLogger')
 creds_logger.setLevel(logging.INFO)
-creds_handler = RotatingFileHandler('cmd_audits.log', maxBytes=2000, backupCount=5) 
+creds_handler = RotatingFileHandler('logs/ssh_cmd__audits.log', maxBytes=10 * 1024 * 1024, backupCount=5) 
 creds_handler.setFormatter(logging_format)
 creds_logger.addHandler(creds_handler)
 
@@ -174,7 +174,7 @@ def client_handle(client, addr, username , password):
 
 # ------Provisioning SSH-Based Hoheypot------
 
-def honeypot(address, port, username, password):
+def run_ssh_honeypot(address, port, username, password):
 
     # creamos un socket
     # AF_INET--> define que va ser ipv4, SOCK_STREAM--> define que usaremos TCP
@@ -198,5 +198,5 @@ def honeypot(address, port, username, password):
 
 
 
-#honeypot('127.0.0.1', 2223, "username", "password")
-#honeypot('127.0.0.1', 2223, username=None, password=None)
+#run_ssh_honeypot('127.0.0.1', 2223, "username", "password")
+#run_ssh_honeypot('127.0.0.1', 2223, username=None, password=None)
