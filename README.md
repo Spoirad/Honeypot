@@ -84,33 +84,50 @@ Honeypot/
 ```bash
 git clone https://github.com/<tu_usuario>/honeypot.git
 cd honeypot
+```
 
-2️⃣ Crear y activar entorno virtual
+### 2️⃣ Crear y activar entorno virtual
+```bash
 python -m venv venv
 # En Windows
 venv\Scripts\activate
 # En Linux/Mac
 source venv/bin/activate
+```
 
-3️⃣ Instalar dependencias
+### 3️⃣ Instalar dependencias
+```bash
 pip install -r requirements.txt
+```
 
-4️⃣ Generar claves SSH (para el honeypot SSH)
+### 4️⃣ Generar claves SSH (para el honeypot SSH)
+```bash
 ssh-keygen -t rsa -b 2048 -f server.key
+```
 
-🚀 Uso
-🔹 Iniciar el Honeypot SSH
+---
+
+## 🚀 Uso
+
+### 🔹 Iniciar el Honeypot SSH
+```bash
 python honeypotController.py -a 0.0.0.0 -p 2223 --ssh -u admin -pw admin
+```
 
-🔹 Iniciar el Honeypot HTTP
+### 🔹 Iniciar el Honeypot HTTP
+```bash
 python honeypotController.py -w --web -p 8080
+```
 
-🔹 Ejecutar el Dashboard
+### 🔹 Ejecutar el Dashboard
+```bash
 python dashboard.py
+```
 
+---
 
-Salida esperada:
-
+### 🧾 Salida esperada
+```text
 =================== HONEYPOT DASHBOARD ===================
 Total SSH attempts: 3
 Total SSH commands: 6
@@ -131,63 +148,75 @@ Top 5 IPs (HTTP):
 
 Top 5 Usuarios (HTTP):
   admin                          4
+```
 
-📁 Ejemplo de logs
-🧩 SSH — logs/ssh_audits.log
+---
+
+## 📁 Ejemplo de logs
+
+### 🧩 SSH — `logs/ssh_audits.log`
+```text
 2025-10-23 12:41:57,528 Client 127.0.0.1 attempted connection with username: admin, password: 1234
+```
 
-⚙️ SSH Comandos — logs/ssh_cmd_audits.log
+### ⚙️ SSH Comandos — `logs/ssh_cmd_audits.log`
+```text
 2025-10-23 12:42:02,249 Command b'whoami' executed by 127.0.0.1
+```
 
-🌐 HTTP — logs/http_audits.log
+### 🌐 HTTP — `logs/http_audits.log`
+```text
 2025-10-23 12:22:17,332 login_attempt ip=127.0.0.1 user="admin" pass="admin" ua="Mozilla/5.0 ..."
+```
 
-🔒 Seguridad
+---
 
-El honeypot debe ejecutarse en entorno controlado (máquina virtual o contenedor).
+## 🔒 Seguridad
 
-No debe exponerse directamente a Internet sin un proxy o cortafuegos intermedio.
+- El honeypot debe ejecutarse **en entorno controlado** (máquina virtual o contenedor).  
+- No debe exponerse directamente a Internet sin un proxy o cortafuegos intermedio.  
+- Los servicios no ejecutan ningún comando real, solo simulan respuestas.  
+- Los logs **no deben compartirse públicamente**, ya que pueden contener credenciales o direcciones IP sensibles.
 
-Los servicios no ejecutan ningún comando real, solo simulan respuestas.
+---
 
-Los logs no deben compartirse públicamente, ya que pueden contener credenciales o direcciones IP sensibles.
+## 📈 Expansión futura (TFG)
 
-📈 Expansión futura (TFG)
+El proyecto está preparado para evolucionar hacia un **honeypot modular** y un **dashboard avanzado**, con:
 
-El proyecto está preparado para evolucionar hacia un honeypot modular y dashboard avanzado, con:
+- Panel de control web local para gestionar múltiples honeypots.  
+- Visualización de logs en tiempo real (gráficas, geolocalización de IPs).  
+- Sistema de alertas automáticas (correo o Telegram).  
+- Almacenamiento en base de datos (SQLite o MongoDB).  
+- Integración con herramientas de análisis (ELK Stack o Splunk).
 
-Panel de control web local para gestionar múltiples honeypots.
+---
 
-Visualización de logs en tiempo real (gráficas, geolocalización de IPs).
+## 🧰 Dependencias principales
 
-Sistema de alertas automáticas (correo o Telegram).
+- [Python 3.10+](https://www.python.org/)  
+- [Paramiko](https://pypi.org/project/paramiko/)  
+- [Flask](https://pypi.org/project/Flask/)
 
-Almacenamiento en base de datos (SQLite o MongoDB).
-
-Integración con herramientas de análisis (ELK Stack o Splunk).
-
-🧰 Dependencias principales
-
-Python 3.10+
-
-Paramiko
-
-Flask
-
-Contenido de requirements.txt:
-
+**Contenido de `requirements.txt`:**
+```text
 paramiko==3.4.0
 flask==3.0.0
+```
 
-🧑‍💻 Autor
+---
 
-Ángel López Paparella
-Grado en Ingeniería de Software — Mención en Ciberseguridad
-Contacto: [opcional]
+## 🧑‍💻 Autor
+
+**Ángel López Paparella**  
+Grado en Ingeniería de Software — Mención en Ciberseguridad  
+Contacto: [opcional]  
 LinkedIn: [opcional]
 
-⚠️ Descargo de responsabilidad
+---
 
-Este software se ha desarrollado con fines educativos y de investigación.
-No debe utilizarse para actividades maliciosas o fuera de entornos controlados.
+## ⚠️ Descargo de responsabilidad
+
+Este software se ha desarrollado con fines educativos y de investigación.  
+No debe utilizarse para actividades maliciosas o fuera de entornos controlados.  
 El autor no se responsabiliza de los daños derivados de un uso inadecuado del código.
