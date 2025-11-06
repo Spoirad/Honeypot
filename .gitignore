@@ -1,30 +1,44 @@
-# --- Entorno virtual ---
+# Entorno virtual
 venv/
 .env/
+
+# Archivos de logs y resultados
+logs/
+*.log
+*.csv
+*.out
+*.tmp
+
+# Claves y certificados
+*.key
+*.pem
+*.pub
+
+# Archivos del sistema o temporales
 __pycache__/
 *.pyc
 *.pyo
 *.pyd
-*.pytest_cache/
-
-# --- Claves SSH ---
-server.key
-server.key.pub
-
-# --- Archivos de logs ---
-*.log
-
-# --- Archivos temporales ---
-*.tmp
-*.bak
 *.swp
 .DS_Store
 Thumbs.db
 
-# --- Configuración local ---
-.idea/
-.vscode/
-*.code-workspace
+# Archivos de desarrollo o depuración
+*.bak
+*.old
+*.orig
 
-# --- Archivos del sistema ---
-desktop.ini
+# Archivos de IDEs
+.vscode/
+.idea/
+*.iml
+
+# Archivos de build o instalación
+build/
+dist/
+*.egg-info/
+
+# Archivos específicos del proyecto
+server.key
+server.key.pub
+out/
