@@ -31,7 +31,7 @@ funnel_logger.addHandler(funnel_handler)
 # creamos otro para capturar la shell emulada, es lo mismo pero para capturar los datos de otro sitio.
 creds_logger = logging.getLogger('CredsLogger')
 creds_logger.setLevel(logging.INFO)
-creds_handler = RotatingFileHandler('logs/ssh_cmd__audits.log', maxBytes=10 * 1024 * 1024, backupCount=5) 
+creds_handler = RotatingFileHandler('logs/ssh_cmd_audits.log', maxBytes=10 * 1024 * 1024, backupCount=5) 
 creds_handler.setFormatter(logging_format)
 creds_logger.addHandler(creds_handler)
 
@@ -66,7 +66,7 @@ def emulated_shell(channel, client_ip):
             elif command.strip() == b'whoami':
                 response = b"\n" + b"corpuser3" + b'\r\n' #user de ejemplo
             elif command.strip() == b'ls': #listar 
-                response = b"\n" + b"jumpbox.conf" + b'\r\n' #archivo ficticio para indicar que la máquina es un bastion/jumpbox (lo cual se supondría por el user).
+                response = b"\n" + b'jumpbox.conf' + b'\r\n' #archivo ficticio para indicar que la máquina es un bastion/jumpbox (lo cual se supondría por el user).
             elif command.strip() == b'cat jumpbox1.conf': # cat del contenido del archivo
                 response = b"\n" + b"Incluir archivo de configuracion " + b'\r\n'
             else:

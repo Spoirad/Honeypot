@@ -17,6 +17,10 @@ def start_thread(target, *args, name=None):
 
 
 def main():
+    
+    # parametros parseables a la hora de realizar el comando 
+    # ejemplo ssh --> python honeypotController.py -a 127.0.0.1 -p 2224 --ssh
+    # emeplo web  --> python honeypotController.py -w
 
     parser = argparse.ArgumentParser(description="Controlador de honeypots")
     parser.add_argument('-a', '--address', type=str, default="0.0.0.0", help="IP donde escuchar (SSH)")
@@ -31,6 +35,7 @@ def main():
 
     threads = {}
 
+    #funcion que maneja en funcion de los parametros introiducidos el despliegue de los honeypots.
     try:
         if args.ssh:
             print("Arrancando SSH honeypot...")

@@ -10,7 +10,8 @@ os.makedirs(OUT_DIR, exist_ok=True)
 
 # --- Regex para parsear tus logs ---
 
-#No entiendo exactamente el funcionamiento pero basicamente parsea y separa los componentes de los logs
+# esto basicamente es la manera de dividir cada una de las lineas de los logs
+# sirve para poder luego tratar los datos de manera individual
 RE_SSH_ATTEMPT = re.compile(
     r'^(?P<ts>[\d\-:\s,]+)\s+Client\s+(?P<ip>\S+)\s+attempted connection with username:\s*(?P<user>.*?),\s+password:\s*(?P<pw>.*)$'
 )
@@ -45,7 +46,8 @@ def clean_backspaces(s: str) -> str:
     return ''.join(result)
 
 
-def parse_file(path, regexes):
+def parse_file(path, regexes): 
+    #funcion qeu usando los regex previos destripa los logs
     entries = []
     if not os.path.exists(path):
         return entries
@@ -75,14 +77,14 @@ def load_all_logs():
 
 def summarize(data):
     summary = {}
-    # SSH attempts
+    # SSH conexiones
     ssh_attempts = data["ssh_attempts"]
     summary["ssh_attempts_total"] = len(ssh_attempts)
     summary["ssh_attempts_ips"] = Counter(d.get("ip") for d in ssh_attempts)
     summary["ssh_attempts_users"] = Counter(d.get("user") for d in ssh_attempts)
     summary["ssh_attempts_pw"] = Counter(d.get("pw") for d in ssh_attempts)
 
-    # SSH commands
+    # SSH comandos
     ssh_cmds = data["ssh_cmd"]
     commands = []
     for d in ssh_cmds:
@@ -92,7 +94,7 @@ def summarize(data):
     summary["ssh_cmd_ips"] = Counter(d.get("ip") for d in ssh_cmds if "ip" in d)
     summary["ssh_cmd_names"] = Counter(commands)
 
-    # HTTP
+    # HTTP login
     http = data["http"]
     summary["http_total"] = len(http)
     summary["http_ips"] = Counter(d.get("ip") for d in http)
@@ -104,6 +106,7 @@ def summarize(data):
 
 # --- Exportar a CSV ---
 
+# funcion que se encarga de la creacion de los csv a partier de los datos dados
 def export_csv(name, entries, fields):
     path = os.path.join(OUT_DIR, f"{name}.csv")
     with open(path, "w", newline='', encoding="utf-8") as f:
@@ -115,6 +118,8 @@ def export_csv(name, entries, fields):
 
 
 # --- Mostrar resultados ---
+# funciones para mostrar por terminal los resultados de un pequeño analisis
+# se plantea el rediseño de toda esta seccion para mejorarlo de alguna manera o añadir interfaz visual
 
 def show_top(counter, title, n=5):
     print(f"\nTop {n} {title}:")
