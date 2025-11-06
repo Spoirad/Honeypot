@@ -210,8 +210,6 @@ flask==3.0.0
 
 **Ángel López Paparella**  
 Grado en Ingeniería de Software — Mención en Ciberseguridad  
-Contacto: [opcional]  
-LinkedIn: [opcional]
 
 ---
 
