@@ -57,16 +57,22 @@ El proyecto se ha diseñado con fines educativos y de investigación en ciberseg
 - ├── ssh_honeypot.py          # Honeypot SSH (Paramiko)
 - ├── web_honeypot.py          # Honeypot HTTP (Flask)
 - ├── honeypotController.py    # Controlador central
-- ├── dashboard.py             # Análisis de logs en consola
+- ├── dashboard.py             # Análisis de logs en consola + creacion .csv
 - │
 - ├── templates/
 - │   └── login.html           # Página de login señuelo
 - │
+- ├── out/                     # Carpeta de con logs convertidos a csv
+- │   ├── http_login.csv
+- │   ├── ssh_attemps.csv
+- │   └── ssh_cmd.csv
 - ├── logs/                    # Carpeta de registros
 - │   ├── ssh_audits.log
 - │   ├── ssh_cmd_audits.log
 - │   └── http_audits.log
 - │
+- ├── server.key               # Clave privada server ssh
+- ├── server.key.pub           # Clave publica server ssh
 - ├── .gitignore
 - ├── requirements.txt
 - └── README.md
