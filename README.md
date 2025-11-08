@@ -2,9 +2,7 @@
 # 🛡️ Honeypot SSH & HTTP en Python
 
 **Autor:** Ángel López Paparella  
-**Asignatura:** Proyectos (3 créditos)  
-**Universidad:** [Añadir aquí nombre del centro o grado]  
-**Fecha:** [Mes/Año de entrega]
+**Universidad:** U-tad
 
 ---
 
@@ -54,29 +52,25 @@ El proyecto se ha diseñado con fines educativos y de investigación en ciberseg
 
 ## 📂 Estructura del proyecto
 
-
-
 Honeypot/
 │
-├── ssh_honeypot.py # Honeypot SSH (Paramiko)
-├── web_honeypot.py # Honeypot HTTP (Flask)
-├── honeypotController.py # Controlador central
-├── dashboard.py # Análisis de logs en consola
+├── ssh_honeypot.py          # Honeypot SSH (Paramiko)
+├── web_honeypot.py          # Honeypot HTTP (Flask)
+├── honeypotController.py    # Controlador central
+├── dashboard.py             # Análisis de logs en consola
 │
 ├── templates/
-│ └── login.html # Página de login señuelo
+│   └── login.html           # Página de login señuelo
 │
-├── logs/ # Carpeta de registros
-│ ├── ssh_audits.log
-│ ├── ssh_cmd_audits.log
-│ └── http_audits.log
+├── logs/                    # Carpeta de registros
+│   ├── ssh_audits.log
+│   ├── ssh_cmd_audits.log
+│   └── http_audits.log
 │
 ├── .gitignore
 ├── requirements.txt
 └── README.md
 
-
----
 
 ## 🔧 Instalación
 
