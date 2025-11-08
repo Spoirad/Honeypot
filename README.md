@@ -82,7 +82,7 @@ El proyecto se ha diseñado con fines educativos y de investigación en ciberseg
 
 ### 1️⃣ Clonar el repositorio
 ```bash
-git clone https://github.com/<tu_usuario>/honeypot.git
+git clone https://github.com/Spoirad/Honeypot.git
 cd honeypot
 ```
 
