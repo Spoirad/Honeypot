@@ -1,0 +1,84 @@
+{% extends "base.html" %}
+
+{% block title %}Inicio - Cybershield Solutions{% endblock %}
+
+{% block content %}
+<!-- Hero Section -->
+<section class="hero-section">
+    <div class="container">
+        <h1 class="display-4">Seguridad Integral para la Era Digital</h1>
+        <p class="lead mb-4">Protegemos sus activos más valiosos con tecnología de vanguardia y expertos de clase
+            mundial.</p>
+        <a href="{{ url_for('login') }}" class="btn btn-light btn-lg text-primary fw-bold">Acceso Clientes</a>
+    </div>
+</section>
+
+<!-- Services Section -->
+<section class="py-5">
+    <div class="container">
+        <div class="text-center mb-5">
+            <h2 class="fw-bold text-primary-custom">Nuestros Servicios</h2>
+            <p class="text-muted">Soluciones adaptadas a las necesidades de su empresa.</p>
+        </div>
+        <div class="row g-4">
+            <div class="col-md-4">
+                <div class="card card-custom h-100 p-4 text-center">
+                    <div class="mb-3 text-primary-custom">
+                        <i class="fas fa-shield-virus fa-3x"></i>
+                    </div>
+                    <h4>Auditoría de Seguridad</h4>
+                    <p class="text-muted">Análisis exhaustivo de vulnerabilidades y pruebas de penetración.</p>
+                </div>
+            </div>
+            <div class="col-md-4">
+                <div class="card card-custom h-100 p-4 text-center">
+                    <div class="mb-3 text-primary-custom">
+                        <i class="fas fa-network-wired fa-3x"></i>
+                    </div>
+                    <h4>Monitorización SOC</h4>
+                    <p class="text-muted">Vigilancia 24/7 de su infraestructura crítica y respuesta a incidentes.</p>
+                </div>
+            </div>
+            <div class="col-md-4">
+                <div class="card card-custom h-100 p-4 text-center">
+                    <div class="mb-3 text-primary-custom">
+                        <i class="fas fa-file-contract fa-3x"></i>
+                    </div>
+                    <h4>Consultoría Estratégica</h4>
+                    <p class="text-muted">Asesoramiento en cumplimiento normativo (GDPR, ISO 27001).</p>
+                </div>
+            </div>
+        </div>
+    </div>
+</section>
+
+<!-- Clients Section -->
+<section class="py-5 bg-light-custom">
+    <div class="container text-center">
+        <h3 class="mb-4 text-secondary">Confían en Nosotros</h3>
+        <div class="row justify-content-center align-items-center opacity-50">
+            <div class="col-6 col-md-2 mb-3">
+                <h4 class="fw-bold text-muted">TECHCORP</h4>
+            </div>
+            <div class="col-6 col-md-2 mb-3">
+                <h4 class="fw-bold text-muted">FINANCE GROUP</h4>
+            </div>
+            <div class="col-6 col-md-2 mb-3">
+                <h4 class="fw-bold text-muted">GLOBAL IND</h4>
+            </div>
+            <div class="col-6 col-md-2 mb-3">
+                <h4 class="fw-bold text-muted">SECURE BANK</h4>
+            </div>
+        </div>
+    </div>
+</section>
+
+<!-- CTA Section -->
+<section class="py-5 text-center">
+    <div class="container">
+        <h3 class="mb-3">¿Listo para asegurar su futuro?</h3>
+        <p class="mb-4">Contacte con nuestro equipo de expertos hoy mismo.</p>
+        <a href="#" class="btn btn-primary-custom btn-lg">Contactar Ahora</a>
+    </div>
+</section>
+{% endblock %}

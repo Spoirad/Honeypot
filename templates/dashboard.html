@@ -1,0 +1,119 @@
+{% extends "base.html" %}
+
+{% block title %}Dashboard - Cybershield Solutions{% endblock %}
+
+{% block content %}
+<div class="container py-5">
+    <div class="d-flex justify-content-between align-items-center mb-4">
+        <h2><i class="fas fa-tachometer-alt me-2 text-primary-custom"></i>Panel de Control</h2>
+        <span class="badge bg-success">Conexión Segura</span>
+    </div>
+
+    <!-- Stats Cards -->
+    <div class="row g-4 mb-5">
+        <div class="col-md-4">
+            <div class="card card-custom h-100">
+                <div class="card-body">
+                    <h5 class="card-title text-muted">Proyectos Activos</h5>
+                    <h2 class="display-4 fw-bold text-primary-custom">12</h2>
+                    <p class="card-text text-success"><i class="fas fa-arrow-up"></i> 2 nuevos este mes</p>
+                </div>
+            </div>
+        </div>
+        <div class="col-md-4">
+            <div class="card card-custom h-100">
+                <div class="card-body">
+                    <h5 class="card-title text-muted">Incidencias Abiertas</h5>
+                    <h2 class="display-4 fw-bold text-warning">3</h2>
+                    <p class="card-text text-muted">Tiempo medio respuesta: 2h</p>
+                </div>
+            </div>
+        </div>
+        <div class="col-md-4">
+            <div class="card card-custom h-100">
+                <div class="card-body">
+                    <h5 class="card-title text-muted">Documentos Compartidos</h5>
+                    <h2 class="display-4 fw-bold text-info">158</h2>
+                    <p class="card-text text-muted">Última actualización: Hoy</p>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <!-- Quick Actions -->
+    <div class="row mb-5">
+        <div class="col-12">
+            <div class="card card-custom">
+                <div class="card-header card-header-custom">
+                    Acciones Rápidas
+                </div>
+                <div class="card-body">
+                    <div class="d-flex gap-3 flex-wrap">
+                        <a href="{{ url_for('upload') if 'upload' in url_for.__globals__ else '/upload' }}"
+                            class="btn btn-outline-primary">
+                            <i class="fas fa-cloud-upload-alt me-2"></i>Subir Documento
+                        </a>
+                        <a href="#" class="btn btn-outline-secondary">
+                            <i class="fas fa-file-invoice me-2"></i>Ver Facturas
+                        </a>
+                        <a href="{{ url_for('admin') if 'admin' in url_for.__globals__ else '/admin' }}"
+                            class="btn btn-outline-danger">
+                            <i class="fas fa-user-shield me-2"></i>Panel Administración
+                        </a>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <!-- Recent Activity Table -->
+    <div class="card card-custom">
+        <div class="card-header bg-white fw-bold">
+            Actividad Reciente
+        </div>
+        <div class="table-responsive">
+            <table class="table table-hover mb-0">
+                <thead>
+                    <tr>
+                        <th>ID</th>
+                        <th>Proyecto</th>
+                        <th>Estado</th>
+                        <th>Fecha</th>
+                        <th>Usuario</th>
+                    </tr>
+                </thead>
+                <tbody>
+                    <tr>
+                        <td>#TR-8832</td>
+                        <td>Auditoría Financiera Q3</td>
+                        <td><span class="badge bg-warning text-dark">En Progreso</span></td>
+                        <td>03/12/2024</td>
+                        <td>admin_finance</td>
+                    </tr>
+                    <tr>
+                        <td>#TR-8831</td>
+                        <td>Pentesting Red Interna</td>
+                        <td><span class="badge bg-success">Completado</span></td>
+                        <td>02/12/2024</td>
+                        <td>sec_team_lead</td>
+                    </tr>
+                    <tr>
+                        <td>#TR-8830</td>
+                        <td>Revisión Contratos</td>
+                        <td><span class="badge bg-info text-dark">Revisión</span></td>
+                        <td>01/12/2024</td>
+                        <td>legal_dept</td>
+                    </tr>
+                    <tr>
+                        <td>#TR-8829</td>
+                        <td>Actualización Firewall</td>
+                        <td><span class="badge bg-success">Completado</span></td>
+                        <td>30/11/2024</td>
+                        <td>sysadmin</td>
+                    </tr>
+                </tbody>
+            </table>
+        </div>
+    </div>
+</div>
+{% endblock %}

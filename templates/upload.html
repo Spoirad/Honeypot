@@ -1,0 +1,69 @@
+{% extends "base.html" %}
+
+{% block title %}Gestión Documental - Cybershield Solutions{% endblock %}
+
+{% block content %}
+<div class="container py-5">
+    <div class="row justify-content-center">
+        <div class="col-md-8">
+            <div class="card card-custom">
+                <div class="card-header card-header-custom">
+                    <i class="fas fa-file-upload me-2"></i>Subida de Archivos Segura
+                </div>
+                <div class="card-body p-4">
+                    <div class="alert alert-info mb-4">
+                        <i class="fas fa-info-circle me-2"></i>
+                        <strong>Nota de Seguridad:</strong> Todos los archivos son escaneados automáticamente en busca
+                        de malware. Solo se permiten formatos PDF, DOCX y XLSX.
+                    </div>
+
+                    {% if message %}
+                    <div class="alert alert-success alert-dismissible fade show" role="alert">
+                        {{ message }}
+                        <button type="button" class="btn-close" data-bs-dismiss="alert" aria-label="Close"></button>
+                    </div>
+                    {% endif %}
+
+                    {% if error %}
+                    <div class="alert alert-danger alert-dismissible fade show" role="alert">
+                        {{ error }}
+                        <button type="button" class="btn-close" data-bs-dismiss="alert" aria-label="Close"></button>
+                    </div>
+                    {% endif %}
+
+                    <form action="{{ url_for('upload') if 'upload' in url_for.__globals__ else '/upload' }}"
+                        method="POST" enctype="multipart/form-data">
+                        <div class="mb-3">
+                            <label for="docType" class="form-label">Tipo de Documento</label>
+                            <select class="form-select" id="docType" name="doc_type">
+                                <option selected>Seleccione tipo...</option>
+                                <option value="contract">Contrato Confidencial</option>
+                                <option value="financial">Informe Financiero</option>
+                                <option value="hr">Datos de Empleados (RRHH)</option>
+                                <option value="technical">Especificaciones Técnicas</option>
+                            </select>
+                        </div>
+
+                        <div class="mb-3">
+                            <label for="description" class="form-label">Descripción / Notas</label>
+                            <textarea class="form-control" id="description" name="description" rows="3"
+                                placeholder="Añada detalles sobre el contenido..."></textarea>
+                        </div>
+
+                        <div class="mb-4">
+                            <label for="file" class="form-label">Seleccionar Archivo</label>
+                            <input class="form-control" type="file" id="file" name="file">
+                        </div>
+
+                        <div class="d-grid">
+                            <button type="submit" class="btn btn-primary-custom">
+                                <i class="fas fa-cloud-upload-alt me-2"></i>Subir Documento
+                            </button>
+                        </div>
+                    </form>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+{% endblock %}

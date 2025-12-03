@@ -1,0 +1,15 @@
+{% extends "base.html" %}
+
+{% block title %}Página No Encontrada - Cybershield Solutions{% endblock %}
+
+{% block content %}
+<div class="container py-5 text-center">
+    <div class="display-1 text-muted mb-4">
+        <i class="fas fa-search"></i>
+    </div>
+    <h1 class="display-4 fw-bold">404 - Página No Encontrada</h1>
+    <p class="lead text-muted mb-4">El recurso que busca no existe o ha sido movido.</p>
+    <a href="{{ url_for('index') if 'index' in url_for.__globals__ else '/' }}" class="btn btn-primary-custom">Volver al
+        Inicio</a>
+</div>
+{% endblock %}

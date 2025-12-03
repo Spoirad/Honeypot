@@ -5,7 +5,7 @@ import argparse
 import threading
 import time
 import sys
-from ssh_honeypot import run_ssh_honeypot   # importa solo la función pública que inicia el honeypot
+#from ssh_honeypot import run_ssh_honeypot   # importa solo la función pública que inicia el honeypot
 from web_honeypot import run_web_honeypot 
 # ----- Argumentos -----
 
@@ -37,12 +37,12 @@ def main():
 
     #funcion que maneja en funcion de los parametros introiducidos el despliegue de los honeypots.
     try:
-        if args.ssh:
-            print("Arrancando SSH honeypot...")
-            # Lanza la función blocking `ssh_honeypot(address, port, username, password)` en hilo
-            t_ssh = start_thread(run_ssh_honeypot, args.address, args.port, args.username, args.password, name="SSH-Honeypot")
-            threads['ssh'] = t_ssh
-            print(f"SSH honeypot arrancado en hilo (escuchando en {args.address}:{args.port}).")
+        #if args.ssh:
+        #    print("Arrancando SSH honeypot...")
+        #    # Lanza la función blocking `ssh_honeypot(address, port, username, password)` en hilo
+        #    t_ssh = start_thread(run_ssh_honeypot, args.address, args.port, args.username, args.password, name="SSH-Honeypot")
+        #    threads['ssh'] = t_ssh
+        #    print(f"SSH honeypot arrancado en hilo (escuchando en {args.address}:{args.port}).")
 
         if args.web:
             print("Arrancando Web honeypot...")
