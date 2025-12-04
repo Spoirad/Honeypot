@@ -28,6 +28,13 @@ RE_HTTP_LOGIN = re.compile(
     r'^(?P<ts>[\d\-:\s,]+)\s+login_attempt\s+ip=(?P<ip>\S+)\s+user="(?P<user>[^"]*)"\s+pass="(?P<pw>[^"]*)"\s+ua="(?P<ua>.*)"$'
 )
 
+RE_FTP_LOGIN = re.compile(
+    r'^(?P<ts>[\d\-:\s,]+)\s+login_attempt\s+ip=(?P<ip>\S+)\s+user="(?P<user>[^"]*)"\s+pass="(?P<pw>[^"]*)"$'
+)
+
+RE_FTP_CMD = re.compile(
+    r'^(?P<ts>[\d\-:\s,]+)\s+command\s+ip=(?P<ip>\S+)\s+raw="(?P<raw>.*)"$'
+)
 
 # --- Funciones de carga y parsing ---
 
@@ -101,6 +108,26 @@ def summarize(data):
     summary["http_users"] = Counter(d.get("user") for d in http)
     summary["http_pw"] = Counter(d.get("pw") for d in http)
 
+    # FTP logins + comandos
+    ftp_entries = data["ftp"]
+    ftp_logins = [d for d in ftp_entries if "user" in d and "pw" in d]
+    ftp_cmds = [d for d in ftp_entries if "raw" in d]
+
+    summary["ftp_total_logins"] = len(ftp_logins)
+    summary["ftp_total_cmds"] = len(ftp_cmds)
+
+    summary["ftp_ips"] = Counter(d.get("ip") for d in ftp_entries if "ip" in d)
+    summary["ftp_users"] = Counter(d.get("user") for d in ftp_logins)
+    summary["ftp_pw"] = Counter(d.get("pw") for d in ftp_logins)
+
+    summary["ftp_cmd_names"] = Counter()
+    for d in ftp_cmds:
+        raw = d.get("raw", "")
+        cmd = raw.split(" ", 1)[0].upper() if raw else ""
+        if cmd:
+            summary["ftp_cmd_names"][cmd] += 1
+
+    # RETURN     
     return summary
 
 
@@ -130,15 +157,28 @@ def show_top(counter, title, n=5):
 
 def print_summary(summary):
     print("\n=================== HONEYPOT DASHBOARD ===================")
-    print(f"Total SSH attempts: {summary['ssh_attempts_total']}")
-    print(f"Total SSH commands: {summary['ssh_cmd_total']}")
-    print(f"Total HTTP logins : {summary['http_total']}")
+    print(f"Total SSH attempts      : {summary['ssh_attempts_total']}")
+    print(f"Total SSH commands      : {summary['ssh_cmd_total']}")
+    print(f"Total HTTP logins       : {summary['http_total']}")
+    print(f"Total FTP logins        : {summary['ftp_total_logins']}")
+    print(f"Total FTP commands      : {summary['ftp_total_cmds']}")
+
+    #SHH
     show_top(summary["ssh_attempts_ips"], "IPs (SSH attempts)")
     show_top(summary["ssh_attempts_users"], "Usuarios (SSH)")
     show_top(summary["ssh_cmd_names"], "Comandos SSH ejecutados")
+
+    #HTTP
     show_top(summary["http_ips"], "IPs (HTTP)")
     show_top(summary["http_users"], "Usuarios (HTTP)")
     show_top(summary["http_pw"], "Passwords (HTTP)")
+
+    #FTP
+    show_top(summary["ftp_ips"], "IPs (FTP)")
+    show_top(summary["ftp_users"], "Usuarios (FTP)")
+    show_top(summary["ftp_pw"], "Passwords (FTP)")
+    show_top(summary["ftp_cmd_names"], "Comandos FTP")
+
 
 
 # --- MAIN ---
@@ -148,7 +188,22 @@ if __name__ == "__main__":
     summary = summarize(logs)
     print_summary(summary)
 
-    # Exporta CSVs básicos
+    # --------Exporta CSVs básicos--------------
+
+
+    #  CSV del SHH: intentos de logi
     export_csv("ssh_attempts", logs["ssh_attempts"], ["ts", "ip", "user", "pw"])
+
+    #  CSV del SSH: comandos
     export_csv("ssh_cmd", logs["ssh_cmd"], ["ts", "ip", "user", "pw", "cmd"])
+
+    #  CSV del HTTP
     export_csv("http_logins", logs["http"], ["ts", "ip", "user", "pw", "ua"])
+
+    #  CSV del FTP: intentos de login
+    ftp_logins = [d for d in logs["ftp"] if "user" in d and "pw" in d]
+    export_csv("ftp_logins", ftp_logins, ["ts", "ip", "user", "pw"])
+
+    #  CSV del FTP: comandos
+    ftp_cmds = [d for d in logs["ftp"] if "raw" in d]
+    export_csv("ftp_cmds", ftp_cmds, ["ts", "ip", "raw"])
