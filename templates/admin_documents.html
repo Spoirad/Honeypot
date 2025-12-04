@@ -1,0 +1,85 @@
+{% extends "base.html" %}
+
+{% block title %}Auditoría de Documentos - Cybershield Solutions{% endblock %}
+
+{% block content %}
+<div class="container py-5">
+    <div class="d-flex justify-content-between align-items-center mb-4">
+        <h2><i class="fas fa-file-contract me-2 text-dark"></i>Auditoría de Archivos</h2>
+        <button class="btn btn-outline-secondary"><i class="fas fa-download me-2"></i>Exportar Reporte</button>
+    </div>
+
+    <div class="card shadow-sm border-0">
+        <div class="card-body p-0">
+            <div class="table-responsive">
+                <table class="table table-hover mb-0 align-middle">
+                    <thead class="bg-light">
+                        <tr>
+                            <th class="ps-4">Archivo</th>
+                            <th>Subido Por</th>
+                            <th>Tipo</th>
+                            <th>Tamaño</th>
+                            <th>Fecha Subida</th>
+                            <th class="text-end pe-4">Estado</th>
+                        </tr>
+                    </thead>
+                    <tbody>
+                        <tr>
+                            <td class="ps-4">
+                                <div class="d-flex align-items-center">
+                                    <i class="fas fa-file-pdf text-danger me-3 fa-lg"></i>
+                                    <span class="fw-bold">contrato_confidencial_v3.pdf</span>
+                                </div>
+                            </td>
+                            <td>Juan Pérez (Finanzas)</td>
+                            <td>Contrato</td>
+                            <td>2.4 MB</td>
+                            <td>Hoy, 10:15 AM</td>
+                            <td class="text-end pe-4"><span class="badge bg-success">Escaneado OK</span></td>
+                        </tr>
+                        <tr>
+                            <td class="ps-4">
+                                <div class="d-flex align-items-center">
+                                    <i class="fas fa-file-excel text-success me-3 fa-lg"></i>
+                                    <span class="fw-bold">nomina_empleados_dic.xlsx</span>
+                                </div>
+                            </td>
+                            <td>María García (RRHH)</td>
+                            <td>RRHH</td>
+                            <td>1.1 MB</td>
+                            <td>Ayer, 16:45 PM</td>
+                            <td class="text-end pe-4"><span class="badge bg-success">Escaneado OK</span></td>
+                        </tr>
+                        <tr>
+                            <td class="ps-4">
+                                <div class="d-flex align-items-center">
+                                    <i class="fas fa-file-archive text-warning me-3 fa-lg"></i>
+                                    <span class="fw-bold">backup_logs_server.zip</span>
+                                </div>
+                            </td>
+                            <td>Admin System</td>
+                            <td>Sistema</td>
+                            <td>450 MB</td>
+                            <td>01/12/2024</td>
+                            <td class="text-end pe-4"><span class="badge bg-warning text-dark">En Revisión</span></td>
+                        </tr>
+                        <tr>
+                            <td class="ps-4">
+                                <div class="d-flex align-items-center">
+                                    <i class="fas fa-file-word text-primary me-3 fa-lg"></i>
+                                    <span class="fw-bold">especificaciones_proyecto_alpha.docx</span>
+                                </div>
+                            </td>
+                            <td>Carlos Ruiz (IT)</td>
+                            <td>Técnico</td>
+                            <td>5.2 MB</td>
+                            <td>30/11/2024</td>
+                            <td class="text-end pe-4"><span class="badge bg-danger">Malware Detectado</span></td>
+                        </tr>
+                    </tbody>
+                </table>
+            </div>
+        </div>
+    </div>
+</div>
+{% endblock %}

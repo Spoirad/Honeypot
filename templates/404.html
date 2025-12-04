@@ -4,12 +4,21 @@
 
 {% block content %}
 <div class="container py-5 text-center">
-    <div class="display-1 text-muted mb-4">
-        <i class="fas fa-search"></i>
+    <div class="row justify-content-center">
+        <div class="col-md-6">
+            <div class="mb-4">
+                <i class="fas fa-search fa-5x text-muted"></i>
+            </div>
+            <h1 class="display-4 fw-bold text-dark">404</h1>
+            <h2 class="h4 mb-4 text-secondary">Recurso No Encontrado</h2>
+            <p class="lead mb-5">La página o documento que busca no existe o ha sido movido. Por favor, verifique la URL
+                o consulte con el administrador.</p>
+
+            <div class="d-flex justify-content-center gap-3">
+                <a href="{{ url_for('index') }}" class="btn btn-outline-dark"><i class="fas fa-home me-2"></i>Volver al
+                    Inicio</a>
+            </div>
+        </div>
     </div>
-    <h1 class="display-4 fw-bold">404 - Página No Encontrada</h1>
-    <p class="lead text-muted mb-4">El recurso que busca no existe o ha sido movido.</p>
-    <a href="{{ url_for('index') if 'index' in url_for.__globals__ else '/' }}" class="btn btn-primary-custom">Volver al
-        Inicio</a>
 </div>
 {% endblock %}

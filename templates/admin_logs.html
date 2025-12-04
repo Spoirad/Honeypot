@@ -1,0 +1,46 @@
+{% extends "base.html" %}
+
+{% block title %}Logs del Sistema - Cybershield Solutions{% endblock %}
+
+{% block content %}
+<div class="container py-5">
+    <div class="d-flex justify-content-between align-items-center mb-4">
+        <h2><i class="fas fa-list-alt me-2 text-dark"></i>Logs de Auditoría</h2>
+        <div>
+            <button class="btn btn-outline-dark me-2"><i class="fas fa-filter me-2"></i>Filtrar</button>
+            <button class="btn btn-dark"><i class="fas fa-download me-2"></i>Descargar Logs</button>
+        </div>
+    </div>
+
+    <div class="card shadow-sm border-0 bg-dark text-light font-monospace">
+        <div class="card-header bg-secondary text-white border-bottom border-dark">
+            <i class="fas fa-terminal me-2"></i>/var/log/secure_audit.log
+        </div>
+        <div class="card-body p-3" style="max-height: 600px; overflow-y: auto;">
+            <div class="mb-1"><span class="text-muted">[2024-12-04 18:30:01]</span> <span class="text-info">INFO</span>:
+                SSH login successful for user 'admin' from 192.168.1.50</div>
+            <div class="mb-1"><span class="text-muted">[2024-12-04 18:28:45]</span> <span
+                    class="text-warning">WARN</span>: Failed password for invalid user 'root' from 45.33.22.11</div>
+            <div class="mb-1"><span class="text-muted">[2024-12-04 18:25:12]</span> <span class="text-info">INFO</span>:
+                Web session started for user 'j.perez' (Role: Employee)</div>
+            <div class="mb-1"><span class="text-muted">[2024-12-04 18:20:00]</span> <span
+                    class="text-success">SUCCESS</span>: File 'contrato_v3.pdf' uploaded by 'j.perez' (Size: 2.4MB)
+            </div>
+            <div class="mb-1"><span class="text-muted">[2024-12-04 18:15:33]</span> <span
+                    class="text-danger">CRITICAL</span>: Port scan detected from IP 10.0.0.55 - Blocked by firewall
+            </div>
+            <div class="mb-1"><span class="text-muted">[2024-12-04 18:10:22]</span> <span class="text-info">INFO</span>:
+                System backup completed successfully (Duration: 45s)</div>
+            <div class="mb-1"><span class="text-muted">[2024-12-04 18:05:11]</span> <span class="text-info">INFO</span>:
+                Database connection pool refreshed</div>
+            <div class="mb-1"><span class="text-muted">[2024-12-04 18:00:00]</span> <span class="text-info">INFO</span>:
+                Cron job 'daily_report' executed</div>
+            <!-- More fake logs... -->
+            <div class="mb-1"><span class="text-muted">[2024-12-04 17:55:44]</span> <span
+                    class="text-warning">WARN</span>: High memory usage detected on worker-02 (85%)</div>
+            <div class="mb-1"><span class="text-muted">[2024-12-04 17:50:12]</span> <span class="text-info">INFO</span>:
+                User 'm.garcia' updated profile information</div>
+        </div>
+    </div>
+</div>
+{% endblock %}

@@ -1,0 +1,159 @@
+{% extends "base.html" %}
+
+{% block title %}Panel de Administración - Cybershield Solutions{% endblock %}
+
+{% block content %}
+<div class="container py-5">
+    <div class="alert alert-danger d-flex align-items-center mb-4 shadow-sm" role="alert">
+        <i class="fas fa-exclamation-triangle fa-2x me-3"></i>
+        <div>
+            <strong>ACCESO RESTRINGIDO:</strong> Esta área es exclusiva para administradores de sistemas. Todos los
+            accesos son monitoreados y registrados.
+        </div>
+    </div>
+
+    <div class="row mb-4">
+        <div class="col-12">
+            <h2 class="text-dark fw-bold"><i class="fas fa-tachometer-alt me-2 text-danger"></i>Dashboard de Seguridad
+            </h2>
+            <p class="text-muted">Visión general del estado del sistema y alertas de seguridad.</p>
+        </div>
+    </div>
+
+    <!-- Stats Cards -->
+    <div class="row g-4 mb-5">
+        <div class="col-md-3">
+            <div class="card border-0 shadow-sm h-100 border-start border-4 border-primary">
+                <div class="card-body">
+                    <h6 class="text-muted text-uppercase small fw-bold">Usuarios Activos</h6>
+                    <h2 class="display-6 fw-bold text-dark">42</h2>
+                    <small class="text-success"><i class="fas fa-arrow-up"></i> 5 hoy</small>
+                </div>
+            </div>
+        </div>
+        <div class="col-md-3">
+            <div class="card border-0 shadow-sm h-100 border-start border-4 border-danger">
+                <div class="card-body">
+                    <h6 class="text-muted text-uppercase small fw-bold">Intentos Fallidos</h6>
+                    <h2 class="display-6 fw-bold text-dark">128</h2>
+                    <small class="text-danger"><i class="fas fa-exclamation-circle"></i> +15% vs ayer</small>
+                </div>
+            </div>
+        </div>
+        <div class="col-md-3">
+            <div class="card border-0 shadow-sm h-100 border-start border-4 border-warning">
+                <div class="card-body">
+                    <h6 class="text-muted text-uppercase small fw-bold">Archivos Subidos</h6>
+                    <h2 class="display-6 fw-bold text-dark">1,205</h2>
+                    <small class="text-muted">Total histórico</small>
+                </div>
+            </div>
+        </div>
+        <div class="col-md-3">
+            <div class="card border-0 shadow-sm h-100 border-start border-4 border-success">
+                <div class="card-body">
+                    <h6 class="text-muted text-uppercase small fw-bold">Estado del Sistema</h6>
+                    <h2 class="display-6 fw-bold text-success">OK</h2>
+                    <small class="text-muted">Uptime: 99.9%</small>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <div class="row g-4">
+        <!-- Recent Activity -->
+        <div class="col-md-8">
+            <div class="card shadow-sm border-0">
+                <div class="card-header bg-white fw-bold border-bottom">
+                    <i class="fas fa-history me-2 text-secondary"></i>Actividad Reciente del Sistema
+                </div>
+                <div class="table-responsive">
+                    <table class="table table-hover mb-0 align-middle">
+                        <thead class="bg-light">
+                            <tr>
+                                <th class="ps-4">Timestamp</th>
+                                <th>Usuario</th>
+                                <th>Acción</th>
+                                <th>IP</th>
+                                <th class="text-end pe-4">Estado</th>
+                            </tr>
+                        </thead>
+                        <tbody>
+                            <tr>
+                                <td class="ps-4 small text-muted">Hace 2 min</td>
+                                <td>admin_sys</td>
+                                <td>Login Admin</td>
+                                <td>192.168.1.50</td>
+                                <td class="text-end pe-4"><span class="badge bg-success">Éxito</span></td>
+                            </tr>
+                            <tr>
+                                <td class="ps-4 small text-muted">Hace 15 min</td>
+                                <td>unknown</td>
+                                <td>Login Fallido</td>
+                                <td>45.23.11.90</td>
+                                <td class="text-end pe-4"><span class="badge bg-danger">Fallo</span></td>
+                            </tr>
+                            <tr>
+                                <td class="ps-4 small text-muted">Hace 45 min</td>
+                                <td>j.perez</td>
+                                <td>Subida Archivo</td>
+                                <td>192.168.1.105</td>
+                                <td class="text-end pe-4"><span class="badge bg-success">Éxito</span></td>
+                            </tr>
+                            <tr>
+                                <td class="ps-4 small text-muted">Hace 1 hora</td>
+                                <td>m.garcia</td>
+                                <td>Cambio Password</td>
+                                <td>192.168.1.112</td>
+                                <td class="text-end pe-4"><span class="badge bg-success">Éxito</span></td>
+                            </tr>
+                        </tbody>
+                    </table>
+                </div>
+                <div class="card-footer bg-white text-center">
+                    <a href="{{ url_for('admin_logs') }}" class="text-decoration-none small fw-bold">Ver todos los logs
+                        <i class="fas fa-arrow-right ms-1"></i></a>
+                </div>
+            </div>
+        </div>
+
+        <!-- Quick Actions -->
+        <div class="col-md-4">
+            <div class="card shadow-sm border-0 mb-4">
+                <div class="card-header bg-white fw-bold border-bottom">
+                    <i class="fas fa-cogs me-2 text-secondary"></i>Acciones Rápidas
+                </div>
+                <div class="list-group list-group-flush">
+                    <a href="{{ url_for('admin_users') }}" class="list-group-item list-group-item-action py-3">
+                        <div class="d-flex align-items-center">
+                            <div class="bg-light rounded p-2 me-3"><i class="fas fa-user-plus text-primary"></i></div>
+                            <div>
+                                <h6 class="mb-0">Gestionar Usuarios</h6>
+                                <small class="text-muted">Crear, editar o bloquear accesos.</small>
+                            </div>
+                        </div>
+                    </a>
+                    <a href="#" class="list-group-item list-group-item-action py-3">
+                        <div class="d-flex align-items-center">
+                            <div class="bg-light rounded p-2 me-3"><i class="fas fa-database text-warning"></i></div>
+                            <div>
+                                <h6 class="mb-0">Backup Base de Datos</h6>
+                                <small class="text-muted">Generar copia de seguridad manual.</small>
+                            </div>
+                        </div>
+                    </a>
+                    <a href="#" class="list-group-item list-group-item-action py-3">
+                        <div class="d-flex align-items-center">
+                            <div class="bg-light rounded p-2 me-3"><i class="fas fa-server text-danger"></i></div>
+                            <div>
+                                <h6 class="mb-0">Reiniciar Servicios</h6>
+                                <small class="text-muted">Reiniciar servidor web o base de datos.</small>
+                            </div>
+                        </div>
+                    </a>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+{% endblock %}

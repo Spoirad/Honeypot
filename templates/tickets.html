@@ -1,0 +1,57 @@
+{% extends "base.html" %}
+
+{% block title %}Soporte y Tickets - Cybershield Solutions{% endblock %}
+
+{% block content %}
+<div class="container py-5">
+    <div class="d-flex justify-content-between align-items-center mb-4">
+        <h2><i class="fas fa-ticket-alt me-2 text-warning"></i>Mis Tickets de Soporte</h2>
+        <button class="btn btn-primary"><i class="fas fa-plus me-2"></i>Nuevo Ticket</button>
+    </div>
+
+    <div class="card shadow-sm border-0">
+        <div class="card-body p-0">
+            <div class="table-responsive">
+                <table class="table table-hover mb-0">
+                    <thead class="bg-light">
+                        <tr>
+                            <th scope="col" class="ps-4">ID</th>
+                            <th scope="col">Asunto</th>
+                            <th scope="col">Departamento</th>
+                            <th scope="col">Estado</th>
+                            <th scope="col">Última Actualización</th>
+                            <th scope="col" class="text-end pe-4">Acciones</th>
+                        </tr>
+                    </thead>
+                    <tbody>
+                        <tr>
+                            <td class="ps-4 fw-bold">#TK-9921</td>
+                            <td>Error al acceder al servidor de archivos</td>
+                            <td>IT Support</td>
+                            <td><span class="badge bg-warning text-dark">En Progreso</span></td>
+                            <td>Hace 2 horas</td>
+                            <td class="text-end pe-4"><button class="btn btn-sm btn-outline-secondary">Ver</button></td>
+                        </tr>
+                        <tr>
+                            <td class="ps-4 fw-bold">#TK-9855</td>
+                            <td>Solicitud de nuevo monitor</td>
+                            <td>Compras</td>
+                            <td><span class="badge bg-success">Resuelto</span></td>
+                            <td>01/12/2024</td>
+                            <td class="text-end pe-4"><button class="btn btn-sm btn-outline-secondary">Ver</button></td>
+                        </tr>
+                        <tr>
+                            <td class="ps-4 fw-bold">#TK-9801</td>
+                            <td>Actualización de software contable</td>
+                            <td>IT Support</td>
+                            <td><span class="badge bg-secondary">Cerrado</span></td>
+                            <td>20/11/2024</td>
+                            <td class="text-end pe-4"><button class="btn btn-sm btn-outline-secondary">Ver</button></td>
+                        </tr>
+                    </tbody>
+                </table>
+            </div>
+        </div>
+    </div>
+</div>
+{% endblock %}

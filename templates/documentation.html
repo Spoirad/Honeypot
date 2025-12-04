@@ -1,0 +1,126 @@
+{% extends "base.html" %}
+
+{% block title %}Documentación - Cybershield Solutions{% endblock %}
+
+{% block content %}
+<div class="container py-5">
+    <div class="d-flex justify-content-between align-items-center mb-4">
+        <h2><i class="fas fa-book me-2 text-info"></i>Centro de Documentación</h2>
+        <div class="input-group w-25">
+            <input type="text" class="form-control" placeholder="Buscar documentos...">
+            <button class="btn btn-outline-secondary" type="button"><i class="fas fa-search"></i></button>
+        </div>
+    </div>
+
+    <div class="row g-4">
+        <!-- Categories -->
+        <div class="col-md-3">
+            <div class="list-group shadow-sm">
+                <a href="#" class="list-group-item list-group-item-action active" aria-current="true">
+                    <i class="fas fa-folder-open me-2"></i>Todos los Documentos
+                </a>
+                <a href="#" class="list-group-item list-group-item-action"><i class="fas fa-user-tie me-2"></i>Recursos
+                    Humanos</a>
+                <a href="#" class="list-group-item list-group-item-action"><i
+                        class="fas fa-shield-alt me-2"></i>Seguridad IT</a>
+                <a href="#" class="list-group-item list-group-item-action"><i
+                        class="fas fa-file-invoice-dollar me-2"></i>Finanzas</a>
+                <a href="#" class="list-group-item list-group-item-action"><i class="fas fa-gavel me-2"></i>Legal</a>
+            </div>
+        </div>
+
+        <!-- Document List -->
+        <div class="col-md-9">
+            <div class="card shadow-sm border-0">
+                <div class="card-body p-0">
+                    <div class="table-responsive">
+                        <table class="table table-hover mb-0 align-middle">
+                            <thead class="bg-light">
+                                <tr>
+                                    <th scope="col" class="ps-4">Nombre del Documento</th>
+                                    <th scope="col">Categoría</th>
+                                    <th scope="col">Fecha</th>
+                                    <th scope="col" class="text-end pe-4">Acción</th>
+                                </tr>
+                            </thead>
+                            <tbody>
+                                <tr>
+                                    <td class="ps-4">
+                                        <div class="d-flex align-items-center">
+                                            <i class="far fa-file-pdf text-danger fa-lg me-3"></i>
+                                            <div>
+                                                <div class="fw-bold">Manual de Empleado 2024</div>
+                                                <div class="small text-muted">v2.1 - Actualizado</div>
+                                            </div>
+                                        </div>
+                                    </td>
+                                    <td><span class="badge bg-secondary">RRHH</span></td>
+                                    <td>01/01/2024</td>
+                                    <td class="text-end pe-4"><a href="#" class="btn btn-sm btn-outline-primary"><i
+                                                class="fas fa-download"></i></a></td>
+                                </tr>
+                                <tr>
+                                    <td class="ps-4">
+                                        <div class="d-flex align-items-center">
+                                            <i class="far fa-file-pdf text-danger fa-lg me-3"></i>
+                                            <div>
+                                                <div class="fw-bold">Política de Seguridad de la Información</div>
+                                                <div class="small text-muted">Obligatorio lectura</div>
+                                            </div>
+                                        </div>
+                                    </td>
+                                    <td><span class="badge bg-info text-dark">Seguridad IT</span></td>
+                                    <td>15/02/2024</td>
+                                    <td class="text-end pe-4"><a href="#" class="btn btn-sm btn-outline-primary"><i
+                                                class="fas fa-download"></i></a></td>
+                                </tr>
+                                <tr>
+                                    <td class="ps-4">
+                                        <div class="d-flex align-items-center">
+                                            <i class="far fa-file-excel text-success fa-lg me-3"></i>
+                                            <div>
+                                                <div class="fw-bold">Plantilla de Gastos de Viaje</div>
+                                                <div class="small text-muted">Formato XLSX</div>
+                                            </div>
+                                        </div>
+                                    </td>
+                                    <td><span class="badge bg-success">Finanzas</span></td>
+                                    <td>10/03/2024</td>
+                                    <td class="text-end pe-4"><a href="#" class="btn btn-sm btn-outline-primary"><i
+                                                class="fas fa-download"></i></a></td>
+                                </tr>
+                                <tr>
+                                    <td class="ps-4">
+                                        <div class="d-flex align-items-center">
+                                            <i class="far fa-file-word text-primary fa-lg me-3"></i>
+                                            <div>
+                                                <div class="fw-bold">Modelo de Contrato de Confidencialidad</div>
+                                                <div class="small text-muted">Para proveedores externos</div>
+                                            </div>
+                                        </div>
+                                    </td>
+                                    <td><span class="badge bg-warning text-dark">Legal</span></td>
+                                    <td>20/05/2024</td>
+                                    <td class="text-end pe-4"><a href="#" class="btn btn-sm btn-outline-primary"><i
+                                                class="fas fa-download"></i></a></td>
+                                </tr>
+                            </tbody>
+                        </table>
+                    </div>
+                </div>
+                <div class="card-footer bg-white text-center py-3">
+                    <nav aria-label="Page navigation">
+                        <ul class="pagination justify-content-center mb-0">
+                            <li class="page-item disabled"><a class="page-link" href="#">Anterior</a></li>
+                            <li class="page-item active"><a class="page-link" href="#">1</a></li>
+                            <li class="page-item"><a class="page-link" href="#">2</a></li>
+                            <li class="page-item"><a class="page-link" href="#">3</a></li>
+                            <li class="page-item"><a class="page-link" href="#">Siguiente</a></li>
+                        </ul>
+                    </nav>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+{% endblock %}

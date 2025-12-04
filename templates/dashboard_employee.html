@@ -1,0 +1,175 @@
+{% extends "base.html" %}
+
+{% block title %}Inicio - Intranet Empleado{% endblock %}
+
+{% block content %}
+<div class="container py-5">
+    <!-- Welcome Header -->
+    <div class="row mb-4">
+        <div class="col-12">
+            <div class="bg-white p-4 rounded shadow-sm border-start border-5 border-primary">
+                <h2 class="fw-bold text-dark">Bienvenido, {{ session.get('username', 'Empleado') }}</h2>
+                <p class="text-muted mb-0">Panel de Control Personal - Última conexión: Hoy, 09:00 AM</p>
+            </div>
+        </div>
+    </div>
+
+    <div class="row g-4">
+        <!-- Shortcuts -->
+        <div class="col-md-8">
+            <h4 class="mb-3 text-secondary"><i class="fas fa-th me-2"></i>Accesos Rápidos</h4>
+            <div class="row g-3">
+                <div class="col-md-6">
+                    <a href="{{ url_for('upload') }}" class="text-decoration-none">
+                        <div class="card h-100 border-0 shadow-sm hover-card">
+                            <div class="card-body text-center p-4">
+                                <div class="icon-circle bg-primary-light mb-3 mx-auto text-primary">
+                                    <i class="fas fa-cloud-upload-alt fa-2x"></i>
+                                </div>
+                                <h5 class="card-title text-dark">Subir Archivos</h5>
+                                <p class="card-text text-muted small">Envío seguro de documentación confidencial.</p>
+                            </div>
+                        </div>
+                    </a>
+                </div>
+                <div class="col-md-6">
+                    <a href="{{ url_for('tickets') }}" class="text-decoration-none">
+                        <div class="card h-100 border-0 shadow-sm hover-card">
+                            <div class="card-body text-center p-4">
+                                <div class="icon-circle bg-warning-light mb-3 mx-auto text-warning">
+                                    <i class="fas fa-ticket-alt fa-2x"></i>
+                                </div>
+                                <h5 class="card-title text-dark">Mis Incidencias</h5>
+                                <p class="card-text text-muted small">Reportar problemas técnicos o solicitar soporte.
+                                </p>
+                            </div>
+                        </div>
+                    </a>
+                </div>
+                <div class="col-md-6">
+                    <a href="{{ url_for('documentation') }}" class="text-decoration-none">
+                        <div class="card h-100 border-0 shadow-sm hover-card">
+                            <div class="card-body text-center p-4">
+                                <div class="icon-circle bg-info-light mb-3 mx-auto text-info">
+                                    <i class="fas fa-book fa-2x"></i>
+                                </div>
+                                <h5 class="card-title text-dark">Documentación</h5>
+                                <p class="card-text text-muted small">Manuales, políticas y procedimientos internos.</p>
+                            </div>
+                        </div>
+                    </a>
+                </div>
+                <div class="col-md-6">
+                    <a href="{{ url_for('profile') }}" class="text-decoration-none">
+                        <div class="card h-100 border-0 shadow-sm hover-card">
+                            <div class="card-body text-center p-4">
+                                <div class="icon-circle bg-success-light mb-3 mx-auto text-success">
+                                    <i class="fas fa-user-circle fa-2x"></i>
+                                </div>
+                                <h5 class="card-title text-dark">Mi Perfil</h5>
+                                <p class="card-text text-muted small">Gestionar datos personales y contraseña.</p>
+                            </div>
+                        </div>
+                    </a>
+                </div>
+            </div>
+
+            <!-- Internal News -->
+            <h4 class="mb-3 mt-5 text-secondary"><i class="fas fa-newspaper me-2"></i>Noticias Internas</h4>
+            <div class="card border-0 shadow-sm">
+                <ul class="list-group list-group-flush">
+                    <li class="list-group-item p-3">
+                        <div class="d-flex w-100 justify-content-between">
+                            <h6 class="mb-1 fw-bold text-primary">Nueva Política de Teletrabajo</h6>
+                            <small class="text-muted">Hace 2 días</small>
+                        </div>
+                        <p class="mb-1 small text-muted">Actualización de las normativas para el trabajo remoto. Por
+                            favor, revisad el documento adjunto en la sección de RRHH.</p>
+                    </li>
+                    <li class="list-group-item p-3">
+                        <div class="d-flex w-100 justify-content-between">
+                            <h6 class="mb-1 fw-bold text-primary">Mantenimiento Programado de Servidores</h6>
+                            <small class="text-muted">Hace 5 días</small>
+                        </div>
+                        <p class="mb-1 small text-muted">Este fin de semana se realizará una actualización de seguridad
+                            en los servidores centrales.</p>
+                    </li>
+                </ul>
+            </div>
+        </div>
+
+        <!-- Sidebar / Notices -->
+        <div class="col-md-4">
+            <div class="card bg-light border-0 shadow-sm mb-4">
+                <div class="card-header bg-transparent border-bottom fw-bold text-dark">
+                    <i class="fas fa-bullhorn me-2 text-danger"></i>Avisos Importantes
+                </div>
+                <div class="card-body">
+                    <div class="alert alert-warning small mb-2">
+                        <strong>Recordatorio:</strong> Completar el curso de concienciación en ciberseguridad antes del
+                        viernes.
+                    </div>
+                    <div class="alert alert-info small mb-0">
+                        <strong>RRHH:</strong> El plazo para solicitar vacaciones de verano se abre el próximo lunes.
+                    </div>
+                </div>
+            </div>
+
+            <div class="card border-0 shadow-sm">
+                <div class="card-header bg-white fw-bold">
+                    <i class="fas fa-history me-2 text-secondary"></i>Mis Últimos Archivos
+                </div>
+                <ul class="list-group list-group-flush small">
+                    <li class="list-group-item d-flex justify-content-between align-items-center">
+                        <span><i class="far fa-file-pdf me-2 text-danger"></i>informe_mensual_nov.pdf</span>
+                        <span class="badge bg-light text-dark">Subido</span>
+                    </li>
+                    <li class="list-group-item d-flex justify-content-between align-items-center">
+                        <span><i class="far fa-file-excel me-2 text-success"></i>gastos_viaje_q3.xlsx</span>
+                        <span class="badge bg-light text-dark">Subido</span>
+                    </li>
+                    <li class="list-group-item d-flex justify-content-between align-items-center">
+                        <span><i class="far fa-file-word me-2 text-primary"></i>contrato_cliente_v2.docx</span>
+                        <span class="badge bg-light text-dark">Subido</span>
+                    </li>
+                </ul>
+            </div>
+        </div>
+    </div>
+</div>
+
+<style>
+    .hover-card {
+        transition: transform 0.2s;
+    }
+
+    .hover-card:hover {
+        transform: translateY(-5px);
+    }
+
+    .icon-circle {
+        width: 60px;
+        height: 60px;
+        border-radius: 50%;
+        display: flex;
+        align-items: center;
+        justify-content: center;
+    }
+
+    .bg-primary-light {
+        background-color: rgba(13, 110, 253, 0.1);
+    }
+
+    .bg-warning-light {
+        background-color: rgba(255, 193, 7, 0.1);
+    }
+
+    .bg-info-light {
+        background-color: rgba(13, 202, 240, 0.1);
+    }
+
+    .bg-success-light {
+        background-color: rgba(25, 135, 84, 0.1);
+    }
+</style>
+{% endblock %}

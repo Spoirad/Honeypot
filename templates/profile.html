@@ -1,0 +1,66 @@
+{% extends "base.html" %}
+
+{% block title %}Mi Perfil - Cybershield Solutions{% endblock %}
+
+{% block content %}
+<div class="container py-5">
+    <div class="row justify-content-center">
+        <div class="col-md-8">
+            <div class="card shadow-sm border-0">
+                <div class="card-header bg-white border-bottom py-3 d-flex justify-content-between align-items-center">
+                    <h4 class="mb-0 text-dark"><i class="fas fa-user-circle me-2 text-primary"></i>Perfil de Empleado
+                    </h4>
+                    <span class="badge bg-success">Activo</span>
+                </div>
+                <div class="card-body p-4">
+                    <div class="text-center mb-4">
+                        <div class="avatar-placeholder bg-light rounded-circle mx-auto mb-3 d-flex align-items-center justify-content-center"
+                            style="width: 100px; height: 100px;">
+                            <i class="fas fa-user fa-3x text-secondary"></i>
+                        </div>
+                        <h5 class="fw-bold">{{ session.get('username', 'Usuario') }}</h5>
+                        <p class="text-muted">Departamento de Finanzas</p>
+                    </div>
+
+                    <form>
+                        <div class="row g-3">
+                            <div class="col-md-6">
+                                <label class="form-label text-muted small">Nombre Completo</label>
+                                <input type="text" class="form-control" value="Juan Pérez García" readonly>
+                            </div>
+                            <div class="col-md-6">
+                                <label class="form-label text-muted small">ID Empleado</label>
+                                <input type="text" class="form-control" value="EMP-2024-8832" readonly>
+                            </div>
+                            <div class="col-md-6">
+                                <label class="form-label text-muted small">Email Corporativo</label>
+                                <input type="email" class="form-control" value="juan.perez@cybershield-fake.com"
+                                    readonly>
+                            </div>
+                            <div class="col-md-6">
+                                <label class="form-label text-muted small">Extensión Telefónica</label>
+                                <input type="text" class="form-control" value="2045" readonly>
+                            </div>
+                            <div class="col-md-6">
+                                <label class="form-label text-muted small">Último Acceso</label>
+                                <input type="text" class="form-control" value="Hoy, 09:00 AM" readonly>
+                            </div>
+                            <div class="col-md-6">
+                                <label class="form-label text-muted small">Rol</label>
+                                <input type="text" class="form-control" value="Empleado" readonly>
+                            </div>
+                        </div>
+
+                        <hr class="my-4">
+
+                        <div class="d-flex justify-content-end gap-2">
+                            <button type="button" class="btn btn-outline-secondary">Cambiar Contraseña</button>
+                            <button type="button" class="btn btn-primary">Editar Datos</button>
+                        </div>
+                    </form>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+{% endblock %}

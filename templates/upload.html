@@ -1,64 +1,81 @@
 {% extends "base.html" %}
 
-{% block title %}Gestión Documental - Cybershield Solutions{% endblock %}
+{% block title %}Subida de Archivos - Cybershield Solutions{% endblock %}
 
 {% block content %}
 <div class="container py-5">
     <div class="row justify-content-center">
         <div class="col-md-8">
-            <div class="card card-custom">
-                <div class="card-header card-header-custom">
-                    <i class="fas fa-file-upload me-2"></i>Subida de Archivos Segura
+            <div class="card shadow-sm border-0">
+                <div class="card-header bg-white border-bottom py-3">
+                    <h4 class="mb-0 text-primary"><i class="fas fa-cloud-upload-alt me-2"></i>Envío Seguro de
+                        Documentación</h4>
                 </div>
                 <div class="card-body p-4">
-                    <div class="alert alert-info mb-4">
-                        <i class="fas fa-info-circle me-2"></i>
-                        <strong>Nota de Seguridad:</strong> Todos los archivos son escaneados automáticamente en busca
-                        de malware. Solo se permiten formatos PDF, DOCX y XLSX.
+
+                    <div class="alert alert-info border-0 bg-info-light text-dark mb-4">
+                        <i class="fas fa-shield-alt me-2"></i><strong>Seguridad:</strong> Todos los archivos son
+                        escaneados y cifrados antes de su almacenamiento.
                     </div>
 
                     {% if message %}
                     <div class="alert alert-success alert-dismissible fade show" role="alert">
-                        {{ message }}
+                        <i class="fas fa-check-circle me-2"></i>{{ message }}
                         <button type="button" class="btn-close" data-bs-dismiss="alert" aria-label="Close"></button>
                     </div>
                     {% endif %}
 
                     {% if error %}
                     <div class="alert alert-danger alert-dismissible fade show" role="alert">
-                        {{ error }}
+                        <i class="fas fa-exclamation-triangle me-2"></i>{{ error }}
                         <button type="button" class="btn-close" data-bs-dismiss="alert" aria-label="Close"></button>
                     </div>
                     {% endif %}
 
-                    <form action="{{ url_for('upload') if 'upload' in url_for.__globals__ else '/upload' }}"
-                        method="POST" enctype="multipart/form-data">
-                        <div class="mb-3">
-                            <label for="docType" class="form-label">Tipo de Documento</label>
-                            <select class="form-select" id="docType" name="doc_type">
-                                <option selected>Seleccione tipo...</option>
-                                <option value="contract">Contrato Confidencial</option>
-                                <option value="financial">Informe Financiero</option>
-                                <option value="hr">Datos de Empleados (RRHH)</option>
-                                <option value="technical">Especificaciones Técnicas</option>
-                            </select>
-                        </div>
+                    <form action="{{ url_for('upload') }}" method="POST" enctype="multipart/form-data">
+                        <div class="row g-3">
+                            <div class="col-md-6">
+                                <label for="docType" class="form-label fw-bold">Tipo de Documento</label>
+                                <select class="form-select" id="docType" name="doc_type" required>
+                                    <option value="" selected disabled>Seleccione...</option>
+                                    <option value="contract">Contrato / Legal</option>
+                                    <option value="financial">Informe Financiero</option>
+                                    <option value="hr">Recursos Humanos</option>
+                                    <option value="technical">Especificación Técnica</option>
+                                    <option value="other">Otro</option>
+                                </select>
+                            </div>
+                            <div class="col-md-6">
+                                <label for="priority" class="form-label fw-bold">Prioridad</label>
+                                <select class="form-select" id="priority" name="priority">
+                                    <option value="normal" selected>Normal</option>
+                                    <option value="high">Alta</option>
+                                    <option value="critical">Crítica</option>
+                                </select>
+                            </div>
 
-                        <div class="mb-3">
-                            <label for="description" class="form-label">Descripción / Notas</label>
-                            <textarea class="form-control" id="description" name="description" rows="3"
-                                placeholder="Añada detalles sobre el contenido..."></textarea>
-                        </div>
+                            <div class="col-12">
+                                <label for="description" class="form-label fw-bold">Descripción / Notas</label>
+                                <textarea class="form-control" id="description" name="description" rows="3"
+                                    placeholder="Breve descripción del contenido..." required></textarea>
+                            </div>
 
-                        <div class="mb-4">
-                            <label for="file" class="form-label">Seleccionar Archivo</label>
-                            <input class="form-control" type="file" id="file" name="file">
-                        </div>
+                            <div class="col-12">
+                                <label for="file" class="form-label fw-bold">Archivo Adjunto</label>
+                                <div class="input-group">
+                                    <input type="file" class="form-control" id="file" name="file" required>
+                                    <label class="input-group-text" for="file"><i class="fas fa-paperclip"></i></label>
+                                </div>
+                                <div class="form-text">Formatos permitidos: PDF, DOCX, XLSX, ZIP. Máx 50MB.</div>
+                            </div>
 
-                        <div class="d-grid">
-                            <button type="submit" class="btn btn-primary-custom">
-                                <i class="fas fa-cloud-upload-alt me-2"></i>Subir Documento
-                            </button>
+                            <div class="col-12 mt-4">
+                                <div class="d-grid">
+                                    <button type="submit" class="btn btn-primary btn-lg">
+                                        <i class="fas fa-upload me-2"></i>Enviar Archivo
+                                    </button>
+                                </div>
+                            </div>
                         </div>
                     </form>
                 </div>
@@ -66,4 +83,10 @@
         </div>
     </div>
 </div>
+
+<style>
+    .bg-info-light {
+        background-color: rgba(13, 202, 240, 0.1);
+    }
+</style>
 {% endblock %}

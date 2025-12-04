@@ -42,3 +42,12 @@ dist/
 server.key
 server.key.pub
 out/
+
+#cookies
+cookies_emp.txt
+cookies_admin.txt
+
+#tests
+tests/
+
+

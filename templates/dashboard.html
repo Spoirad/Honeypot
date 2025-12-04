@@ -49,15 +49,13 @@
                 </div>
                 <div class="card-body">
                     <div class="d-flex gap-3 flex-wrap">
-                        <a href="{{ url_for('upload') if 'upload' in url_for.__globals__ else '/upload' }}"
-                            class="btn btn-outline-primary">
+                        <a href="{{ url_for('upload') }}" class="btn btn-outline-primary">
                             <i class="fas fa-cloud-upload-alt me-2"></i>Subir Documento
                         </a>
                         <a href="#" class="btn btn-outline-secondary">
                             <i class="fas fa-file-invoice me-2"></i>Ver Facturas
                         </a>
-                        <a href="{{ url_for('admin') if 'admin' in url_for.__globals__ else '/admin' }}"
-                            class="btn btn-outline-danger">
+                        <a href="{{ url_for('admin') }}" class="btn btn-outline-danger">
                             <i class="fas fa-user-shield me-2"></i>Panel Administración
                         </a>
                     </div>

@@ -1,84 +1,36 @@
 {% extends "base.html" %}
 
-{% block title %}Inicio - Cybershield Solutions{% endblock %}
+{% block title %}Cybershield Solutions - Intranet Corporativa{% endblock %}
 
 {% block content %}
-<!-- Hero Section -->
-<section class="hero-section">
-    <div class="container">
-        <h1 class="display-4">Seguridad Integral para la Era Digital</h1>
-        <p class="lead mb-4">Protegemos sus activos más valiosos con tecnología de vanguardia y expertos de clase
-            mundial.</p>
-        <a href="{{ url_for('login') }}" class="btn btn-light btn-lg text-primary fw-bold">Acceso Clientes</a>
-    </div>
-</section>
+<div class="container py-5">
+    <div class="row align-items-center min-vh-75">
+        <div class="col-lg-6">
+            <h1 class="display-4 fw-bold text-dark mb-4">Portal Corporativo Seguro</h1>
+            <p class="lead text-muted mb-5">Bienvenido a la intranet de Cybershield Solutions. Acceda a sus herramientas
+                de trabajo, documentación interna y gestión de incidencias de forma segura.</p>
 
-<!-- Services Section -->
-<section class="py-5">
-    <div class="container">
-        <div class="text-center mb-5">
-            <h2 class="fw-bold text-primary-custom">Nuestros Servicios</h2>
-            <p class="text-muted">Soluciones adaptadas a las necesidades de su empresa.</p>
-        </div>
-        <div class="row g-4">
-            <div class="col-md-4">
-                <div class="card card-custom h-100 p-4 text-center">
-                    <div class="mb-3 text-primary-custom">
-                        <i class="fas fa-shield-virus fa-3x"></i>
-                    </div>
-                    <h4>Auditoría de Seguridad</h4>
-                    <p class="text-muted">Análisis exhaustivo de vulnerabilidades y pruebas de penetración.</p>
-                </div>
+            <div class="d-grid gap-3 d-md-flex">
+                <a href="{{ url_for('login') }}" class="btn btn-primary btn-lg px-5"><i
+                        class="fas fa-sign-in-alt me-2"></i>Acceso Empleados</a>
+                <a href="#" class="btn btn-outline-secondary btn-lg px-5">Soporte Remoto</a>
             </div>
-            <div class="col-md-4">
-                <div class="card card-custom h-100 p-4 text-center">
-                    <div class="mb-3 text-primary-custom">
-                        <i class="fas fa-network-wired fa-3x"></i>
+
+            <div class="mt-5 pt-4 border-top">
+                <div class="d-flex align-items-center text-muted small">
+                    <i class="fas fa-shield-alt fa-2x me-3 text-success"></i>
+                    <div>
+                        <strong>Conexión Segura SSL/TLS</strong><br>
+                        Su actividad está siendo monitoreada por el SOC.
                     </div>
-                    <h4>Monitorización SOC</h4>
-                    <p class="text-muted">Vigilancia 24/7 de su infraestructura crítica y respuesta a incidentes.</p>
-                </div>
-            </div>
-            <div class="col-md-4">
-                <div class="card card-custom h-100 p-4 text-center">
-                    <div class="mb-3 text-primary-custom">
-                        <i class="fas fa-file-contract fa-3x"></i>
-                    </div>
-                    <h4>Consultoría Estratégica</h4>
-                    <p class="text-muted">Asesoramiento en cumplimiento normativo (GDPR, ISO 27001).</p>
                 </div>
             </div>
         </div>
-    </div>
-</section>
-
-<!-- Clients Section -->
-<section class="py-5 bg-light-custom">
-    <div class="container text-center">
-        <h3 class="mb-4 text-secondary">Confían en Nosotros</h3>
-        <div class="row justify-content-center align-items-center opacity-50">
-            <div class="col-6 col-md-2 mb-3">
-                <h4 class="fw-bold text-muted">TECHCORP</h4>
-            </div>
-            <div class="col-6 col-md-2 mb-3">
-                <h4 class="fw-bold text-muted">FINANCE GROUP</h4>
-            </div>
-            <div class="col-6 col-md-2 mb-3">
-                <h4 class="fw-bold text-muted">GLOBAL IND</h4>
-            </div>
-            <div class="col-6 col-md-2 mb-3">
-                <h4 class="fw-bold text-muted">SECURE BANK</h4>
-            </div>
+        <div class="col-lg-6 d-none d-lg-block text-center">
+            <img src="https://img.freepik.com/free-vector/cyber-security-concept_23-2148532223.jpg"
+                alt="Security Illustration" class="img-fluid rounded-3 shadow-lg opacity-75" style="max-height: 400px;">
+            <!-- Note: Using a placeholder image from a free source for demo purposes. In a real scenario, this would be a local asset. -->
         </div>
     </div>
-</section>
-
-<!-- CTA Section -->
-<section class="py-5 text-center">
-    <div class="container">
-        <h3 class="mb-3">¿Listo para asegurar su futuro?</h3>
-        <p class="mb-4">Contacte con nuestro equipo de expertos hoy mismo.</p>
-        <a href="#" class="btn btn-primary-custom btn-lg">Contactar Ahora</a>
-    </div>
-</section>
+</div>
 {% endblock %}
