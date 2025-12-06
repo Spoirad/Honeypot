@@ -41,7 +41,7 @@ def admin_required(f):
 
 
 # ----- HTTP Logger -----
-http_logger = logging.getLogger('FunnelLogger')
+http_logger = logging.getLogger('HTTPFunnelLogger')
 http_logger.setLevel(logging.INFO)
 # Ensure logs directory exists
 if not os.path.exists('logs'):

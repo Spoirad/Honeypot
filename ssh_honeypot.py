@@ -18,7 +18,7 @@ host_key = paramiko.RSAKey(filename='server.key')
 
 #Este primero es para capturar IP adress, username , pass
 #datos de logger en documentaciond e python python-logging
-funnel_logger = logging.getLogger('FunnelLogger')
+funnel_logger = logging.getLogger('SSHFunnelLogger')
 funnel_logger.setLevel(logging.INFO)
 
 #handler --> provides options so it sets the format. where we are going to log
@@ -67,7 +67,7 @@ def emulated_shell(channel, client_ip):
                 response = b"\n" + b"corpuser3" + b'\r\n' #user de ejemplo
             elif command.strip() == b'ls': #listar 
                 response = b"\n" + b'jumpbox.conf' + b'\r\n' #archivo ficticio para indicar que la máquina es un bastion/jumpbox (lo cual se supondría por el user).
-            elif command.strip() == b'cat jumpbox1.conf': # cat del contenido del archivo
+            elif command.strip() == b'cat jumpbox.conf': # cat del contenido del archivo
                 response = b"\n" + b"Incluir archivo de configuracion " + b'\r\n'
             else:
                 response = b"\n" + bytes(command.strip()) + b"\r\n" # si escriben algo no soportado simplemente se lo devuelve
