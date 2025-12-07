@@ -1,5 +1,5 @@
-📘 README.md — Honeypot SSH & HTTP en Python
-# 🛡️ Honeypot SSH & HTTP en Python
+📘 README.md — Honeypot SSH, HTTP y FTP en Python
+# 🛡️ Honeypot SSH, HTTP & FTP en Python
 
 **Autor:** Ángel López Paparella  
 **Universidad:** U-tad
@@ -8,7 +8,7 @@
 
 ## 🧠 Introducción
 
-Este proyecto consiste en el desarrollo de un **Honeypot de baja interacción** implementado en **Python**, capaz de simular servicios **SSH** y **HTTP**, registrar los intentos de acceso y almacenar los eventos generados para su posterior análisis.
+Este proyecto consiste en el desarrollo de un **Honeypot de baja interacción** implementado en **Python**, capaz de simular servicios **SSH**, **HTTP** (Intranet Corporativa) y **FTP**, registrar los intentos de acceso y almacenar los eventos generados para su posterior análisis.
 
 El objetivo principal es **detectar y registrar intentos de intrusión**, sin ofrecer acceso real a ningún sistema.  
 El proyecto se ha diseñado con fines educativos y de investigación en ciberseguridad, priorizando la seguridad y el aislamiento del entorno.
@@ -25,58 +25,86 @@ El proyecto se ha diseñado con fines educativos y de investigación en ciberseg
   - `logs/ssh_audits.log` → intentos de conexión.
   - `logs/ssh_cmd_audits.log` → comandos introducidos por el atacante.
 
-### 🌐 Honeypot HTTP (`web_honeypot.py`)
-- Simula un portal web con formulario de login (Flask + HTML).
-- Captura intentos de autenticación (usuario, contraseña, IP, User-Agent).
-- Registra los intentos en:
+### 🏢 Honeypot HTTP - Intranet Corporativa (`web_honeypot.py`)
+- Simula una **Intranet Corporativa** realista con roles de usuario (**Admin** y **Empleado**).
+- Sistema de login con redirección basada en roles:
+  - **Admin**: Acceso a paneles de gestión de usuarios, documentos y logs.
+  - **Empleado**: Acceso a dashboard, perfil, subida de ficheros y tickets.
+- **Funcionalidad de subida de archivos**: Permite a los atacantes "subir" ficheros (se guardan de forma segura para análisis).
+- Captura intentos de autenticación (usuario, contraseña, IP, User-Agent) y actividad de navegación.
+- Registra los eventos en:
   - `logs/http_audits.log`
-- Página utilizada: `templates/login.html` (login minimalista y realista).
+  - Archivos subidos en: `logs/web_uploads/`
+
+### 📂 Honeypot FTP (`ftp_honeypot.py`)
+- Simula un servidor FTP corporativo ("ProFTPD").
+- Sistema de archivos virtual (fake filesystem) navegable:
+  - Directorios simulados: `backups`, `public`, `private`.
+  - Archivos señuelo: `readme.txt`, `db_dump.sql`, `passwords.txt`.
+- Soporta comandos comunes: `USER`, `PASS`, `LIST`, `CWD`, `PWD`, `RETR` (descarga simulada), `STOR`, `PASV`, etc.
+- Registra todas las interacciones (intentos de login, comandos, descargas).
+- Almacena los eventos en:
+  - `logs/ftp_audits.log`
 
 ### 🧩 Controlador de servicios (`honeypotController.py`)
-- Permite lanzar el honeypot SSH o HTTP desde una misma interfaz.
-- Controla parámetros como dirección, puerto, usuario y contraseña.
-- Soporta ejecución de un honeypot a la vez.
-- Muestra mensajes de estado y permite detener el servicio con `Ctrl+C`.
+- Interfaz centralizada CLI para lanzar y gestionar los honeypots (SSH, HTTP, FTP).
+- Permite ejecución concurrente de múltiples servicios mediante hilos (threading).
+- Modo interactivo para monitorizar estado (`status`) y detener servicios.
+- Argumentos de línea de comandos para facilitar la configuración (IP, puerto, usuarios).
 
-### 📊 Dashboard CLI (`dashboard.py`)
-- Analiza los logs generados por ambos honeypots.
-- Muestra estadísticas en consola:
-  - Total de eventos por servicio.
-  - IPs con más actividad.
-  - Usuarios y contraseñas más utilizados.
-  - Comandos SSH más ejecutados.
-- Limpia los comandos con caracteres de retroceso (`\x7f`).
-- No requiere conexión web ni dependencias adicionales.
+### 📊 Dashboard CLI & Exportación (`dashboard.py`)
+- Analiza los logs generados por todos los servicios (SSH, HTTP, FTP).
+- **Muestra estadísticas en consola**:
+  - Totales de ataques/intentos por servicio.
+  - Top IPs atacantes, usuarios y contraseñas más probados.
+  - Comandos SSH y FTP más ejecutados.
+- **Exportación a CSV**: Genera reportes estructurados en la carpeta `out/`:
+  - `ssh_attempts.csv`, `ssh_cmd.csv`
+  - `http_logins.csv`
+  - `ftp_logins.csv`, `ftp_cmds.csv`
+- Limpieza automática de caracteres de control en logs de comandos.
 
 ---
 
 ## 📂 Estructura del proyecto
 
-- Honeypot/
-- │
-- ├── ssh_honeypot.py          # Honeypot SSH (Paramiko)
-- ├── web_honeypot.py          # Honeypot HTTP (Flask)
-- ├── honeypotController.py    # Controlador central
-- ├── dashboard.py             # Análisis de logs en consola + creacion .csv
-- │
-- ├── templates/
-- │   └── login.html           # Página de login señuelo
-- │
-- ├── out/                     # Carpeta de con logs convertidos a csv
-- │   ├── http_login.csv
-- │   ├── ssh_attemps.csv
-- │   └── ssh_cmd.csv
-- ├── logs/                    # Carpeta de registros
-- │   ├── ssh_audits.log
-- │   ├── ssh_cmd_audits.log
-- │   └── http_audits.log
-- │
-- ├── server.key               # Clave privada server ssh
-- ├── server.key.pub           # Clave publica server ssh
-- ├── .gitignore
-- ├── requirements.txt
-- └── README.md
-
+```text
+Honeypot/
+├── ssh_honeypot.py          # Honeypot SSH (Paramiko)
+├── web_honeypot.py          # Honeypot HTTP (Flask - Intranet Corporativa)
+├── ftp_honeypot.py          # Honeypot FTP (Sockets - Fake Filesystem)
+├── honeypotController.py    # Controlador central multihilo
+├── dashboard.py             # Análisis de logs y exportación a CSV
+│
+├── templates/               # Plantillas HTML para el entorno Web
+│   ├── login.html           # Login
+│   ├── dashboard_employee.html  # Panel de empleado
+│   ├── admin_panel.html     # Panel de administración
+│   ├── upload.html          # Página de subida de archivos
+│   └── ... (otros templates)
+│
+├── static/                  # Archivos estáticos (CSS, JS, imágenes)
+│
+├── out/                     # Reportes CSV generados
+│   ├── http_logins.csv
+│   ├── ssh_attempts.csv
+│   ├── ssh_cmd.csv
+│   ├── ftp_logins.csv
+│   └── ftp_cmds.csv
+│
+├── logs/                    # Registros de actividad
+│   ├── ssh_audits.log
+│   ├── ssh_cmd_audits.log
+│   ├── http_audits.log
+│   ├── ftp_audits.log
+│   └── web_uploads/         # Archivos subidos por atacantes via HTTP
+│
+├── server.key               # Clave privada server ssh
+├── server.key.pub           # Clave publica server ssh
+├── .gitignore
+├── requirements.txt
+└── README.md
+```
 
 ## 🔧 Instalación
 
@@ -109,45 +137,75 @@ ssh-keygen -t rsa -b 2048 -f server.key
 
 ## 🚀 Uso
 
-### 🔹 Iniciar el Honeypot SSH
+El controlador permite lanzar uno o varios honeypots simultáneamente.
+
+### 🔹 Sintaxis General
 ```bash
-python honeypotController.py -a 0.0.0.0 -p 2223 --ssh -u admin -pw admin
+python honeypotController.py [OPCIONES]
 ```
 
-### 🔹 Iniciar el Honeypot HTTP
+### 🔹 Ejemplos de ejecución
+
+**1. Iniciar todo (SSH + Web + FTP):**
 ```bash
-python honeypotController.py -w --web -p 8080
+python honeypotController.py -s -w --web-port 8080 -f --ftp-port 2121
 ```
 
-### 🔹 Ejecutar el Dashboard
+**2. Iniciar solo SSH (puerto 2223 user/pass admin/admin):**
+```bash
+python honeypotController.py -s -p 2223 -u admin -pw admin
+```
+
+**3. Iniciar solo Web (Corporate Intranet):**
+```bash
+python honeypotController.py -w --web-port 5000
+```
+*Credenciales Web Demo:* `admin:password` (Rol Admin), `employee:password` (Rol Empleado).
+
+**4. Iniciar solo FTP:**
+```bash
+python honeypotController.py -f --ftp-port 21
+```
+
+### 🔹 Comandos en tiempo de ejecución
+Una vez iniciado el controlador, puedes usar la consola interactiva:
+- `status`: Ver estado de los servicios.
+- `stop <ssh|web|ftp|all>`: Detener servicios (nota: detiene el proceso principal).
+- `exit`: Salir.
+
+### 🔹 Ejecutar el Dashboard (Análisis)
+Para ver estadísticas y generar los CSVs:
 ```bash
 python dashboard.py
 ```
 
 ---
 
-### 🧾 Salida esperada
+## 🧾 Salida esperada (Dashboard)
+
 ```text
 =================== HONEYPOT DASHBOARD ===================
-Total SSH attempts: 3
-Total SSH commands: 6
-Total HTTP logins : 4
+Total SSH attempts      : 12
+Total SSH commands      : 5
+Total HTTP logins       : 8
+Total FTP logins        : 4
+Total FTP commands      : 15
 
 Top 5 IPs (SSH attempts):
-  127.0.0.1                      3
-
-Top 5 Usuarios (SSH):
-  username                       3
+  192.168.1.50                 12
 
 Top 5 Comandos SSH ejecutados:
-  whoami                         2
-  uname -a                       1
+  whoami                       3
+  ls -la                       2
 
-Top 5 IPs (HTTP):
-  127.0.0.1                      4
+Top 5 Usuarios (FTP):
+  admin                        3
+  anonymous                    1
 
-Top 5 Usuarios (HTTP):
-  admin                          4
+[+] Exportado: out/ssh_attempts.csv
+[+] Exportado: out/http_logins.csv
+[+] Exportado: out/ftp_logins.csv
+...
 ```
 
 ---
@@ -159,14 +217,17 @@ Top 5 Usuarios (HTTP):
 2025-10-23 12:41:57,528 Client 127.0.0.1 attempted connection with username: admin, password: 1234
 ```
 
-### ⚙️ SSH Comandos — `logs/ssh_cmd_audits.log`
-```text
-2025-10-23 12:42:02,249 Command b'whoami' executed by 127.0.0.1
-```
-
 ### 🌐 HTTP — `logs/http_audits.log`
 ```text
-2025-10-23 12:22:17,332 login_attempt ip=127.0.0.1 user="admin" pass="admin" ua="Mozilla/5.0 ..."
+2025-10-23 12:22:17,332 login_attempt ip=127.0.0.1 user="admin" pass="password" ua="Mozilla/5.0 ..."
+2025-10-23 12:22:18,100 FILE_UPLOAD ip=127.0.0.1 user="employee" filename="malware.exe" size=10240
+```
+
+### 📂 FTP — `logs/ftp_audits.log`
+```text
+2025-10-23 14:00:01,123 new_connection ip=192.168.1.20
+2025-10-23 14:00:05,456 login_success ip=192.168.1.20 user="admin" pass="password"
+2025-10-23 14:00:10,789 command ip=192.168.1.20 user="admin" raw="RETR passwords.txt"
 ```
 
 ---
@@ -175,7 +236,8 @@ Top 5 Usuarios (HTTP):
 
 - El honeypot debe ejecutarse **en entorno controlado** (máquina virtual o contenedor).  
 - No debe exponerse directamente a Internet sin un proxy o cortafuegos intermedio.  
-- Los servicios no ejecutan ningún comando real, solo simulan respuestas.  
+- Los servicios no ejecutan ningún comando real en la máquina anfitriona, solo simulan respuestas.  
+- **Advertencia**: Los archivos subidos vía Web se guardan en `logs/web_uploads`. No ejecutarlos en la máquina local.
 - Los logs **no deben compartirse públicamente**, ya que pueden contener credenciales o direcciones IP sensibles.
 
 ---
