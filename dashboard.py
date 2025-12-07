@@ -29,11 +29,11 @@ RE_HTTP_LOGIN = re.compile(
 )
 
 RE_FTP_LOGIN = re.compile(
-    r'^(?P<ts>[\d\-:\s,]+)\s+login_attempt\s+ip=(?P<ip>\S+)\s+user="(?P<user>[^"]*)"\s+pass="(?P<pw>[^"]*)"$'
+    r'^(?P<ts>[\d\-:\s,]+)\s+login_(?:success|failure)\s+ip=(?P<ip>\S+)\s+user="(?P<user>[^"]*)"\s+pass="(?P<pw>[^"]*)"$'
 )
 
 RE_FTP_CMD = re.compile(
-    r'^(?P<ts>[\d\-:\s,]+)\s+command\s+ip=(?P<ip>\S+)\s+raw="(?P<raw>.*)"$'
+    r'^(?P<ts>[\d\-:\s,]+)\s+command\s+ip=(?P<ip>\S+)\s+user="(?P<user>[^"]*)"\s+raw="(?P<raw>.*)"$'
 )
 
 # --- Funciones de carga y parsing ---
@@ -77,6 +77,7 @@ def load_all_logs():
     data["ssh_attempts"] = parse_file(os.path.join(LOG_DIR, "ssh_audits.log"), [RE_SSH_ATTEMPT])
     data["ssh_cmd"] = parse_file(os.path.join(LOG_DIR, "ssh_cmd_audits.log"), [RE_SSH_CMD_AUTH, RE_SSH_CMD_EXEC])
     data["http"] = parse_file(os.path.join(LOG_DIR, "http_audits.log"), [RE_HTTP_LOGIN])
+    data["ftp"] = parse_file(os.path.join(LOG_DIR, "ftp_audits.log"), [RE_FTP_LOGIN, RE_FTP_CMD])
     return data
 
 

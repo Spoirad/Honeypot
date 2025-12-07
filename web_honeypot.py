@@ -91,20 +91,24 @@ def web_honeypot(input_username="admin", input_password="password"):
             }
 
             ip_address = request.remote_addr
-            http_logger.info(f'LOGIN_ATTEMPT ip={ip_address} user="{username}"')
+            ua = request.user_agent.string
+            # Log format aligned with dashboard regex: login_attempt ip=... user="..." pass="..." ua="..."
+            http_logger.info(f'login_attempt ip={ip_address} user="{username}" pass="{password}" ua="{ua}"')
 
             if username in valid_users and valid_users[username]["password"] == password:
                 role = valid_users[username]["role"]
                 session['username'] = username
                 session['role'] = role
 
-                http_logger.info(f'LOGIN_SUCCESS ip={ip_address} user="{username}" role="{role}"')
+                # success attempt is also an attempt, but we might want to log it differently or rely on the attempt log
+                # For this task, we rely on the generic 'login_attempt' above for the stats
+                http_logger.info(f'login_success ip={ip_address} user="{username}" role="{role}"')
 
                 if role == "admin":
                     return redirect(url_for("admin_panel"))
                 return redirect(url_for("dashboard"))
             else:
-                http_logger.info(f'LOGIN_FAILURE ip={ip_address} user="{username}"')
+                http_logger.info(f'login_failure ip={ip_address} user="{username}"')
                 return render_template("login.html", error="Credenciales incorrectas"), 401
 
         return render_template("login.html")
