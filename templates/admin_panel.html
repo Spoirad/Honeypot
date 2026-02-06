@@ -20,14 +20,14 @@
         </div>
     </div>
 
-    <!-- Stats Cards -->
+    <!-- Stats Cards - Datos reales del honeypot -->
     <div class="row g-4 mb-5">
         <div class="col-md-3">
             <div class="card border-0 shadow-sm h-100 border-start border-4 border-primary">
                 <div class="card-body">
                     <h6 class="text-muted text-uppercase small fw-bold">Usuarios Activos</h6>
-                    <h2 class="display-6 fw-bold text-dark">42</h2>
-                    <small class="text-success"><i class="fas fa-arrow-up"></i> 5 hoy</small>
+                    <h2 class="display-6 fw-bold text-dark">{{ stats.active_users if stats else 0 }}</h2>
+                    <small class="text-success"><i class="fas fa-arrow-up"></i> Logins exitosos</small>
                 </div>
             </div>
         </div>
@@ -35,8 +35,8 @@
             <div class="card border-0 shadow-sm h-100 border-start border-4 border-danger">
                 <div class="card-body">
                     <h6 class="text-muted text-uppercase small fw-bold">Intentos Fallidos</h6>
-                    <h2 class="display-6 fw-bold text-dark">128</h2>
-                    <small class="text-danger"><i class="fas fa-exclamation-circle"></i> +15% vs ayer</small>
+                    <h2 class="display-6 fw-bold text-dark">{{ stats.failed_attempts if stats else 0 }}</h2>
+                    <small class="text-danger"><i class="fas fa-exclamation-circle"></i> Credenciales inválidas</small>
                 </div>
             </div>
         </div>
@@ -44,17 +44,17 @@
             <div class="card border-0 shadow-sm h-100 border-start border-4 border-warning">
                 <div class="card-body">
                     <h6 class="text-muted text-uppercase small fw-bold">Archivos Subidos</h6>
-                    <h2 class="display-6 fw-bold text-dark">1,205</h2>
+                    <h2 class="display-6 fw-bold text-dark">{{ stats.uploads_total if stats else 0 }}</h2>
                     <small class="text-muted">Total histórico</small>
                 </div>
             </div>
         </div>
         <div class="col-md-3">
-            <div class="card border-0 shadow-sm h-100 border-start border-4 border-success">
+            <div class="card border-0 shadow-sm h-100 border-start border-4 border-info">
                 <div class="card-body">
-                    <h6 class="text-muted text-uppercase small fw-bold">Estado del Sistema</h6>
-                    <h2 class="display-6 fw-bold text-success">OK</h2>
-                    <small class="text-muted">Uptime: 99.9%</small>
+                    <h6 class="text-muted text-uppercase small fw-bold">Accesos Prohibidos</h6>
+                    <h2 class="display-6 fw-bold text-dark">{{ stats.forbidden_count if stats else 0 }}</h2>
+                    <small class="text-info"><i class="fas fa-ban"></i> Intentos de escalada</small>
                 </div>
             </div>
         </div>
@@ -72,41 +72,40 @@
                         <thead class="bg-light">
                             <tr>
                                 <th class="ps-4">Timestamp</th>
-                                <th>Usuario</th>
-                                <th>Acción</th>
-                                <th>IP</th>
-                                <th class="text-end pe-4">Estado</th>
+                                <th>Evento</th>
+                                <th>Detalles</th>
                             </tr>
                         </thead>
                         <tbody>
+                            {% if stats and stats.recent_activity %}
+                            {% for entry in stats.recent_activity[:8] %}
                             <tr>
-                                <td class="ps-4 small text-muted">Hace 2 min</td>
-                                <td>admin_sys</td>
-                                <td>Login Admin</td>
-                                <td>192.168.1.50</td>
-                                <td class="text-end pe-4"><span class="badge bg-success">Éxito</span></td>
+                                <td class="ps-4 small text-muted font-monospace">{{ entry[:23] }}</td>
+                                <td>
+                                    {% if 'login_success' in entry %}
+                                    <span class="badge bg-success">Login OK</span>
+                                    {% elif 'login_failure' in entry %}
+                                    <span class="badge bg-danger">Login Fallido</span>
+                                    {% elif 'file_upload' in entry %}
+                                    <span class="badge bg-info">Upload</span>
+                                    {% elif 'forbidden_access' in entry %}
+                                    <span class="badge bg-warning text-dark">Prohibido</span>
+                                    {% elif 'ticket_creation' in entry %}
+                                    <span class="badge bg-secondary">Ticket</span>
+                                    {% else %}
+                                    <span class="badge bg-light text-dark">Evento</span>
+                                    {% endif %}
+                                </td>
+                                <td class="small font-monospace text-truncate" style="max-width: 300px;">
+                                    {{ entry[24:] if entry|length > 24 else entry }}
+                                </td>
                             </tr>
+                            {% endfor %}
+                            {% else %}
                             <tr>
-                                <td class="ps-4 small text-muted">Hace 15 min</td>
-                                <td>unknown</td>
-                                <td>Login Fallido</td>
-                                <td>45.23.11.90</td>
-                                <td class="text-end pe-4"><span class="badge bg-danger">Fallo</span></td>
+                                <td colspan="3" class="text-center text-muted py-4">No hay actividad reciente</td>
                             </tr>
-                            <tr>
-                                <td class="ps-4 small text-muted">Hace 45 min</td>
-                                <td>j.perez</td>
-                                <td>Subida Archivo</td>
-                                <td>192.168.1.105</td>
-                                <td class="text-end pe-4"><span class="badge bg-success">Éxito</span></td>
-                            </tr>
-                            <tr>
-                                <td class="ps-4 small text-muted">Hace 1 hora</td>
-                                <td>m.garcia</td>
-                                <td>Cambio Password</td>
-                                <td>192.168.1.112</td>
-                                <td class="text-end pe-4"><span class="badge bg-success">Éxito</span></td>
-                            </tr>
+                            {% endif %}
                         </tbody>
                     </table>
                 </div>
@@ -133,21 +132,21 @@
                             </div>
                         </div>
                     </a>
-                    <a href="#" class="list-group-item list-group-item-action py-3">
+                    <a href="{{ url_for('admin_documents') }}" class="list-group-item list-group-item-action py-3">
                         <div class="d-flex align-items-center">
-                            <div class="bg-light rounded p-2 me-3"><i class="fas fa-database text-warning"></i></div>
+                            <div class="bg-light rounded p-2 me-3"><i class="fas fa-file-alt text-info"></i></div>
                             <div>
-                                <h6 class="mb-0">Backup Base de Datos</h6>
-                                <small class="text-muted">Generar copia de seguridad manual.</small>
+                                <h6 class="mb-0">Auditoría de Archivos</h6>
+                                <small class="text-muted">Ver archivos subidos por usuarios.</small>
                             </div>
                         </div>
                     </a>
-                    <a href="#" class="list-group-item list-group-item-action py-3">
+                    <a href="{{ url_for('admin_logs') }}" class="list-group-item list-group-item-action py-3">
                         <div class="d-flex align-items-center">
-                            <div class="bg-light rounded p-2 me-3"><i class="fas fa-server text-danger"></i></div>
+                            <div class="bg-light rounded p-2 me-3"><i class="fas fa-terminal text-dark"></i></div>
                             <div>
-                                <h6 class="mb-0">Reiniciar Servicios</h6>
-                                <small class="text-muted">Reiniciar servidor web o base de datos.</small>
+                                <h6 class="mb-0">Logs de Auditoría</h6>
+                                <small class="text-muted">Ver registros del sistema.</small>
                             </div>
                         </div>
                     </a>

@@ -1,0 +1,311 @@
+<!DOCTYPE html>
+<html lang="es">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>{% block title %}Analyst Console{% endblock %}</title>
+
+    <!-- Bootstrap 5 CSS -->
+    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/css/bootstrap.min.css" rel="stylesheet">
+
+    <!-- FontAwesome -->
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0/css/all.min.css">
+
+    <!-- Chart.js -->
+    <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
+
+    <style>
+        :root {
+            --sidebar-width: 250px;
+            /* Bootstrap Dark Mode Overrides */
+            --bs-body-bg: #1a1a2e;
+            --bs-body-color: #eaeaea;
+            --bs-table-bg: transparent;
+            --bs-table-color: #eaeaea;
+            --bs-table-striped-bg: rgba(255, 255, 255, 0.03);
+            --bs-table-hover-bg: rgba(233, 69, 96, 0.1);
+            --bs-table-border-color: rgba(255, 255, 255, 0.08);
+            --bs-card-bg: #16213e;
+            --bs-card-border-color: rgba(255, 255, 255, 0.1);
+        }
+
+        /* === Tables - Remove all white backgrounds === */
+        .table {
+            --bs-table-bg: transparent;
+            --bs-table-color: #eaeaea;
+            color: #eaeaea;
+            background-color: transparent;
+        }
+
+        .table> :not(caption)>*>* {
+            background-color: transparent;
+            border-bottom-color: rgba(255, 255, 255, 0.05);
+            color: inherit;
+        }
+
+        .table-striped>tbody>tr:nth-of-type(odd)>* {
+            --bs-table-bg-type: rgba(255, 255, 255, 0.02);
+            background-color: var(--bs-table-bg-type);
+            color: #eaeaea;
+        }
+
+        .table-hover>tbody>tr:hover>* {
+            --bs-table-bg-state: rgba(233, 69, 96, 0.1);
+            background-color: var(--bs-table-bg-state);
+            color: #eaeaea;
+        }
+
+        /* === Card body - explicit dark background === */
+        .card-body {
+            background-color: #16213e;
+            color: #eaeaea;
+        }
+
+        /* === Form controls === */
+        .form-control,
+        .form-select {
+            background-color: #0f3460;
+            border-color: rgba(255, 255, 255, 0.15);
+            color: #eaeaea;
+        }
+
+        .form-control:focus,
+        .form-select:focus {
+            background-color: #16213e;
+            border-color: #e94560;
+            color: #eaeaea;
+            box-shadow: 0 0 0 0.2rem rgba(233, 69, 96, 0.25);
+        }
+
+        .form-control::placeholder {
+            color: rgba(255, 255, 255, 0.4);
+        }
+
+        /* === Scrollbar styling === */
+        ::-webkit-scrollbar {
+            width: 8px;
+            height: 8px;
+        }
+
+        ::-webkit-scrollbar-track {
+            background: #1a1a2e;
+        }
+
+        ::-webkit-scrollbar-thumb {
+            background: #0f3460;
+            border-radius: 4px;
+        }
+
+        ::-webkit-scrollbar-thumb:hover {
+            background: #e94560;
+        }
+
+        body {
+            background-color: #1a1a2e;
+            color: #eaeaea;
+            font-family: 'Segoe UI', system-ui, sans-serif;
+        }
+
+        .sidebar {
+            position: fixed;
+            top: 0;
+            left: 0;
+            height: 100vh;
+            width: var(--sidebar-width);
+            background: linear-gradient(180deg, #16213e 0%, #0f3460 100%);
+            padding: 20px 0;
+            z-index: 1000;
+        }
+
+        .sidebar .brand {
+            padding: 0 20px 20px;
+            border-bottom: 1px solid rgba(255, 255, 255, 0.1);
+            margin-bottom: 20px;
+        }
+
+        .sidebar .brand h4 {
+            color: #e94560;
+            margin: 0;
+        }
+
+        .sidebar .brand small {
+            color: rgba(255, 255, 255, 0.5);
+        }
+
+        .sidebar .nav-link {
+            color: rgba(255, 255, 255, 0.7);
+            padding: 12px 20px;
+            border-left: 3px solid transparent;
+            transition: all 0.3s;
+        }
+
+        .sidebar .nav-link:hover,
+        .sidebar .nav-link.active {
+            background: rgba(233, 69, 96, 0.1);
+            color: #e94560;
+            border-left-color: #e94560;
+        }
+
+        .sidebar .nav-link i {
+            width: 25px;
+        }
+
+        .main-content {
+            margin-left: var(--sidebar-width);
+            padding: 30px;
+            min-height: 100vh;
+        }
+
+        .card {
+            background: #16213e;
+            border: none;
+            border-radius: 10px;
+        }
+
+        .card-header {
+            background: rgba(0, 0, 0, 0.2);
+            border-bottom: 1px solid rgba(255, 255, 255, 0.1);
+        }
+
+        .kpi-card {
+            background: linear-gradient(135deg, #16213e 0%, #1a1a2e 100%);
+            border: 1px solid rgba(233, 69, 96, 0.3);
+            border-radius: 10px;
+            padding: 20px;
+            text-align: center;
+            transition: transform 0.3s;
+        }
+
+        .kpi-card:hover {
+            transform: translateY(-5px);
+            border-color: #e94560;
+        }
+
+        .kpi-card .kpi-value {
+            font-size: 2.5rem;
+            font-weight: bold;
+            color: #e94560;
+        }
+
+        .kpi-card .kpi-label {
+            color: rgba(255, 255, 255, 0.6);
+            font-size: 0.9rem;
+        }
+
+        .table {
+            color: #eaeaea;
+        }
+
+        .table thead th {
+            background: rgba(0, 0, 0, 0.3);
+            border-color: rgba(255, 255, 255, 0.1);
+            font-weight: 600;
+        }
+
+        .table tbody td {
+            border-color: rgba(255, 255, 255, 0.05);
+        }
+
+        .table-hover tbody tr:hover {
+            background: rgba(233, 69, 96, 0.1);
+        }
+
+        .badge-severity-critical {
+            background: #dc3545;
+        }
+
+        .badge-severity-high {
+            background: #fd7e14;
+        }
+
+        .badge-severity-medium {
+            background: #ffc107;
+            color: #000;
+        }
+
+        .badge-severity-low {
+            background: #6c757d;
+        }
+
+        .badge-severity-info {
+            background: #0dcaf0;
+            color: #000;
+        }
+
+        .btn-export {
+            background: #e94560;
+            border: none;
+            color: white;
+        }
+
+        .btn-export:hover {
+            background: #d63d56;
+            color: white;
+        }
+
+        .chart-container {
+            position: relative;
+            height: 250px;
+        }
+
+        .text-accent {
+            color: #e94560;
+        }
+    </style>
+    {% block extra_head %}{% endblock %}
+</head>
+
+<body>
+    <!-- Sidebar -->
+    <nav class="sidebar">
+        <div class="brand">
+            <h4><i class="fas fa-user-secret me-2"></i>Analyst Console</h4>
+            <small>Honeypot Analytics</small>
+        </div>
+        <ul class="nav flex-column">
+            <li class="nav-item">
+                <a class="nav-link {% if request.path == '/' %}active{% endif %}" href="/">
+                    <i class="fas fa-tachometer-alt"></i> Overview
+                </a>
+            </li>
+            <li class="nav-item">
+                <a class="nav-link {% if request.path == '/web' %}active{% endif %}" href="/web">
+                    <i class="fas fa-globe"></i> Web / HTTP
+                </a>
+            </li>
+            <li class="nav-item">
+                <a class="nav-link {% if request.path == '/ssh' %}active{% endif %}" href="/ssh">
+                    <i class="fas fa-terminal"></i> SSH
+                </a>
+            </li>
+            <li class="nav-item">
+                <a class="nav-link {% if request.path == '/ftp' %}active{% endif %}" href="/ftp">
+                    <i class="fas fa-folder-open"></i> FTP
+                </a>
+            </li>
+            <li class="nav-item">
+                <a class="nav-link {% if request.path == '/uploads' %}active{% endif %}" href="/uploads">
+                    <i class="fas fa-cloud-upload-alt"></i> Uploads
+                </a>
+            </li>
+        </ul>
+        <div class="mt-auto px-3 pt-4" style="position: absolute; bottom: 20px; left: 0; right: 0;">
+            <small class="text-muted d-block text-center">
+                <i class="fas fa-shield-alt me-1"></i> Localhost Only
+            </small>
+        </div>
+    </nav>
+
+    <!-- Main Content -->
+    <div class="main-content">
+        {% block content %}{% endblock %}
+    </div>
+
+    <!-- Bootstrap JS -->
+    <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/js/bootstrap.bundle.min.js"></script>
+
+    {% block extra_scripts %}{% endblock %}
+</body>
+
+</html>

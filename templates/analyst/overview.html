@@ -1,0 +1,310 @@
+{% extends "analyst/base.html" %}
+
+{% block title %}Overview - Analyst Console{% endblock %}
+
+{% block content %}
+<div class="d-flex justify-content-between align-items-center mb-4">
+    <h2><i class="fas fa-tachometer-alt me-2 text-accent"></i>Overview</h2>
+    <button class="btn btn-outline-light btn-sm" onclick="location.reload()">
+        <i class="fas fa-sync-alt me-2"></i>Refrescar
+    </button>
+</div>
+
+<!-- KPIs Row -->
+<div class="row g-4 mb-4">
+    <div class="col-lg-3 col-md-6">
+        <div class="kpi-card">
+            <div class="kpi-value">{{ kpis.ssh_attempts }}</div>
+            <div class="kpi-label"><i class="fas fa-terminal me-1"></i>SSH Attempts</div>
+        </div>
+    </div>
+    <div class="col-lg-3 col-md-6">
+        <div class="kpi-card">
+            <div class="kpi-value">{{ kpis.ssh_commands }}</div>
+            <div class="kpi-label"><i class="fas fa-code me-1"></i>SSH Commands</div>
+        </div>
+    </div>
+    <div class="col-lg-3 col-md-6">
+        <div class="kpi-card">
+            <div class="kpi-value">{{ kpis.http_logins }}</div>
+            <div class="kpi-label"><i class="fas fa-globe me-1"></i>HTTP Login Attempts</div>
+        </div>
+    </div>
+    <div class="col-lg-3 col-md-6">
+        <div class="kpi-card">
+            <div class="kpi-value">{{ kpis.http_forbidden }}</div>
+            <div class="kpi-label"><i class="fas fa-ban me-1"></i>Forbidden Access</div>
+        </div>
+    </div>
+</div>
+
+<div class="row g-4 mb-4">
+    <div class="col-lg-3 col-md-6">
+        <div class="kpi-card">
+            <div class="kpi-value">{{ kpis.http_uploads }}</div>
+            <div class="kpi-label"><i class="fas fa-upload me-1"></i>File Uploads</div>
+        </div>
+    </div>
+    <div class="col-lg-3 col-md-6">
+        <div class="kpi-card">
+            <div class="kpi-value">{{ kpis.ftp_logins }}</div>
+            <div class="kpi-label"><i class="fas fa-folder-open me-1"></i>FTP Logins</div>
+        </div>
+    </div>
+    <div class="col-lg-3 col-md-6">
+        <div class="kpi-card">
+            <div class="kpi-value">{{ kpis.ftp_commands }}</div>
+            <div class="kpi-label"><i class="fas fa-terminal me-1"></i>FTP Commands</div>
+        </div>
+    </div>
+    <div class="col-lg-3 col-md-6">
+        <div class="kpi-card">
+            <div class="kpi-value">{{ kpis.ftp_downloads }}</div>
+            <div class="kpi-label"><i class="fas fa-download me-1"></i>FTP Downloads</div>
+        </div>
+    </div>
+</div>
+
+<!-- Top 10 Tables -->
+<div class="row g-4">
+    <!-- HTTP Top IPs -->
+    <div class="col-lg-4">
+        <div class="card h-100">
+            <div class="card-header">
+                <i class="fas fa-network-wired me-2"></i>Top IPs (HTTP)
+            </div>
+            <div class="card-body p-0">
+                <table class="table table-hover mb-0">
+                    <thead>
+                        <tr>
+                            <th>IP</th>
+                            <th class="text-end">Count</th>
+                        </tr>
+                    </thead>
+                    <tbody>
+                        {% for item in tops.http_ips %}
+                        <tr>
+                            <td><code>{{ item.item }}</code></td>
+                            <td class="text-end">{{ item.count }}</td>
+                        </tr>
+                        {% else %}
+                        <tr>
+                            <td colspan="2" class="text-center text-muted">No data</td>
+                        </tr>
+                        {% endfor %}
+                    </tbody>
+                </table>
+            </div>
+        </div>
+    </div>
+
+    <!-- HTTP Top Users -->
+    <div class="col-lg-4">
+        <div class="card h-100">
+            <div class="card-header">
+                <i class="fas fa-user me-2"></i>Top Users (HTTP)
+            </div>
+            <div class="card-body p-0">
+                <table class="table table-hover mb-0">
+                    <thead>
+                        <tr>
+                            <th>User</th>
+                            <th class="text-end">Count</th>
+                        </tr>
+                    </thead>
+                    <tbody>
+                        {% for item in tops.http_users %}
+                        <tr>
+                            <td><code>{{ item.item }}</code></td>
+                            <td class="text-end">{{ item.count }}</td>
+                        </tr>
+                        {% else %}
+                        <tr>
+                            <td colspan="2" class="text-center text-muted">No data</td>
+                        </tr>
+                        {% endfor %}
+                    </tbody>
+                </table>
+            </div>
+        </div>
+    </div>
+
+    <!-- HTTP Top Passwords -->
+    <div class="col-lg-4">
+        <div class="card h-100">
+            <div class="card-header">
+                <i class="fas fa-key me-2"></i>Top Passwords (HTTP)
+            </div>
+            <div class="card-body p-0">
+                <table class="table table-hover mb-0">
+                    <thead>
+                        <tr>
+                            <th>Password</th>
+                            <th class="text-end">Count</th>
+                        </tr>
+                    </thead>
+                    <tbody>
+                        {% for item in tops.http_passwords %}
+                        <tr>
+                            <td><code>{{ item.item }}</code></td>
+                            <td class="text-end">{{ item.count }}</td>
+                        </tr>
+                        {% else %}
+                        <tr>
+                            <td colspan="2" class="text-center text-muted">No data</td>
+                        </tr>
+                        {% endfor %}
+                    </tbody>
+                </table>
+            </div>
+        </div>
+    </div>
+</div>
+
+<div class="row g-4 mt-2">
+    <!-- SSH Top IPs -->
+    <div class="col-lg-4">
+        <div class="card h-100">
+            <div class="card-header">
+                <i class="fas fa-terminal me-2"></i>Top IPs (SSH)
+            </div>
+            <div class="card-body p-0">
+                <table class="table table-hover mb-0">
+                    <thead>
+                        <tr>
+                            <th>IP</th>
+                            <th class="text-end">Count</th>
+                        </tr>
+                    </thead>
+                    <tbody>
+                        {% for item in tops.ssh_ips %}
+                        <tr>
+                            <td><code>{{ item.item }}</code></td>
+                            <td class="text-end">{{ item.count }}</td>
+                        </tr>
+                        {% else %}
+                        <tr>
+                            <td colspan="2" class="text-center text-muted">No data</td>
+                        </tr>
+                        {% endfor %}
+                    </tbody>
+                </table>
+            </div>
+        </div>
+    </div>
+
+    <!-- FTP Top IPs -->
+    <div class="col-lg-4">
+        <div class="card h-100">
+            <div class="card-header">
+                <i class="fas fa-folder-open me-2"></i>Top IPs (FTP)
+            </div>
+            <div class="card-body p-0">
+                <table class="table table-hover mb-0">
+                    <thead>
+                        <tr>
+                            <th>IP</th>
+                            <th class="text-end">Count</th>
+                        </tr>
+                    </thead>
+                    <tbody>
+                        {% for item in tops.ftp_ips %}
+                        <tr>
+                            <td><code>{{ item.item }}</code></td>
+                            <td class="text-end">{{ item.count }}</td>
+                        </tr>
+                        {% else %}
+                        <tr>
+                            <td colspan="2" class="text-center text-muted">No data</td>
+                        </tr>
+                        {% endfor %}
+                    </tbody>
+                </table>
+            </div>
+        </div>
+    </div>
+
+    <!-- FTP Top Users -->
+    <div class="col-lg-4">
+        <div class="card h-100">
+            <div class="card-header">
+                <i class="fas fa-user me-2"></i>Top Users (FTP)
+            </div>
+            <div class="card-body p-0">
+                <table class="table table-hover mb-0">
+                    <thead>
+                        <tr>
+                            <th>User</th>
+                            <th class="text-end">Count</th>
+                        </tr>
+                    </thead>
+                    <tbody>
+                        {% for item in tops.ftp_users %}
+                        <tr>
+                            <td><code>{{ item.item }}</code></td>
+                            <td class="text-end">{{ item.count }}</td>
+                        </tr>
+                        {% else %}
+                        <tr>
+                            <td colspan="2" class="text-center text-muted">No data</td>
+                        </tr>
+                        {% endfor %}
+                    </tbody>
+                </table>
+            </div>
+        </div>
+    </div>
+</div>
+
+<!-- Recent Events -->
+<div class="row mt-4">
+    <div class="col-12">
+        <div class="card">
+            <div class="card-header d-flex justify-content-between align-items-center">
+                <span><i class="fas fa-clock me-2"></i>Recent HTTP Events</span>
+                <a href="/web" class="btn btn-sm btn-outline-light">Ver todos</a>
+            </div>
+            <div class="card-body p-0">
+                <table class="table table-hover mb-0">
+                    <thead>
+                        <tr>
+                            <th>Timestamp</th>
+                            <th>IP</th>
+                            <th>User</th>
+                            <th>Event</th>
+                        </tr>
+                    </thead>
+                    <tbody>
+                        {% for event in recent_events %}
+                        <tr>
+                            <td><small class="text-muted">{{ event.ts[:19] if event.ts else 'N/A' }}</small></td>
+                            <td><code>{{ event.ip or 'N/A' }}</code></td>
+                            <td>{{ event.user or event.admin or 'N/A' }}</td>
+                            <td>
+                                {% if event.ua %}
+                                <span class="badge bg-info">Login</span>
+                                {% elif event.role and 'action' not in event %}
+                                <span class="badge bg-success">Success</span>
+                                {% elif event.filename %}
+                                <span class="badge bg-primary">Upload</span>
+                                {% elif event.path %}
+                                <span class="badge bg-warning text-dark">Forbidden</span>
+                                {% elif event.action %}
+                                <span class="badge bg-danger">Admin</span>
+                                {% else %}
+                                <span class="badge bg-secondary">Event</span>
+                                {% endif %}
+                            </td>
+                        </tr>
+                        {% else %}
+                        <tr>
+                            <td colspan="4" class="text-center text-muted py-4">No recent events</td>
+                        </tr>
+                        {% endfor %}
+                    </tbody>
+                </table>
+            </div>
+        </div>
+    </div>
+</div>
+{% endblock %}

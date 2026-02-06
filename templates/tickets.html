@@ -6,8 +6,21 @@
 <div class="container py-5">
     <div class="d-flex justify-content-between align-items-center mb-4">
         <h2><i class="fas fa-ticket-alt me-2 text-warning"></i>Mis Tickets de Soporte</h2>
-        <button class="btn btn-primary"><i class="fas fa-plus me-2"></i>Nuevo Ticket</button>
+        <button class="btn btn-primary" data-bs-toggle="modal" data-bs-target="#newTicketModal">
+            <i class="fas fa-plus me-2"></i>Nuevo Ticket
+        </button>
     </div>
+
+    {% with messages = get_flashed_messages(with_categories=true) %}
+    {% if messages %}
+    {% for category, message in messages %}
+    <div class="alert alert-{{ category if category != 'message' else 'info' }} alert-dismissible fade show" role="alert">
+        {{ message }}
+        <button type="button" class="btn-close" data-bs-dismiss="alert" aria-label="Close"></button>
+    </div>
+    {% endfor %}
+    {% endif %}
+    {% endwith %}
 
     <div class="card shadow-sm border-0">
         <div class="card-body p-0">
@@ -18,39 +31,122 @@
                             <th scope="col" class="ps-4">ID</th>
                             <th scope="col">Asunto</th>
                             <th scope="col">Departamento</th>
+                            <th scope="col">Prioridad</th>
                             <th scope="col">Estado</th>
-                            <th scope="col">Última Actualización</th>
+                            <th scope="col">Fecha</th>
                             <th scope="col" class="text-end pe-4">Acciones</th>
                         </tr>
                     </thead>
                     <tbody>
+                        {% if tickets %}
+                        {% for ticket in tickets %}
+                        <tr>
+                            <td class="ps-4 fw-bold">#{{ ticket.id }}</td>
+                            <td>{{ ticket.subject[:40] }}{% if ticket.subject|length > 40 %}...{% endif %}</td>
+                            <td>{{ ticket.department }}</td>
+                            <td>
+                                {% if ticket.priority == 'high' %}
+                                <span class="badge bg-warning text-dark">Alta</span>
+                                {% elif ticket.priority == 'critical' %}
+                                <span class="badge bg-danger">Crítica</span>
+                                {% else %}
+                                <span class="badge bg-secondary">Normal</span>
+                                {% endif %}
+                            </td>
+                            <td>
+                                {% if ticket.status == 'Abierto' %}
+                                <span class="badge bg-info">{{ ticket.status }}</span>
+                                {% elif ticket.status == 'En Progreso' %}
+                                <span class="badge bg-warning text-dark">{{ ticket.status }}</span>
+                                {% elif ticket.status == 'Resuelto' %}
+                                <span class="badge bg-success">{{ ticket.status }}</span>
+                                {% else %}
+                                <span class="badge bg-secondary">{{ ticket.status }}</span>
+                                {% endif %}
+                            </td>
+                            <td class="small text-muted">{{ ticket.timestamp[:10] if ticket.timestamp else 'N/A' }}</td>
+                            <td class="text-end pe-4"><button class="btn btn-sm btn-outline-secondary">Ver</button></td>
+                        </tr>
+                        {% endfor %}
+                        {% else %}
+                        <!-- Tickets de ejemplo si no hay tickets reales -->
                         <tr>
                             <td class="ps-4 fw-bold">#TK-9921</td>
                             <td>Error al acceder al servidor de archivos</td>
                             <td>IT Support</td>
+                            <td><span class="badge bg-secondary">Normal</span></td>
                             <td><span class="badge bg-warning text-dark">En Progreso</span></td>
-                            <td>Hace 2 horas</td>
+                            <td class="small text-muted">Hace 2 horas</td>
                             <td class="text-end pe-4"><button class="btn btn-sm btn-outline-secondary">Ver</button></td>
                         </tr>
                         <tr>
                             <td class="ps-4 fw-bold">#TK-9855</td>
                             <td>Solicitud de nuevo monitor</td>
                             <td>Compras</td>
+                            <td><span class="badge bg-secondary">Normal</span></td>
                             <td><span class="badge bg-success">Resuelto</span></td>
-                            <td>01/12/2024</td>
+                            <td class="small text-muted">01/12/2024</td>
                             <td class="text-end pe-4"><button class="btn btn-sm btn-outline-secondary">Ver</button></td>
                         </tr>
-                        <tr>
-                            <td class="ps-4 fw-bold">#TK-9801</td>
-                            <td>Actualización de software contable</td>
-                            <td>IT Support</td>
-                            <td><span class="badge bg-secondary">Cerrado</span></td>
-                            <td>20/11/2024</td>
-                            <td class="text-end pe-4"><button class="btn btn-sm btn-outline-secondary">Ver</button></td>
-                        </tr>
+                        {% endif %}
                     </tbody>
                 </table>
             </div>
+        </div>
+    </div>
+</div>
+
+<!-- Modal para nuevo ticket -->
+<div class="modal fade" id="newTicketModal" tabindex="-1" aria-labelledby="newTicketModalLabel" aria-hidden="true">
+    <div class="modal-dialog modal-lg">
+        <div class="modal-content">
+            <form action="{{ url_for('tickets') }}" method="POST">
+                <div class="modal-header">
+                    <h5 class="modal-title" id="newTicketModalLabel">
+                        <i class="fas fa-plus-circle me-2 text-primary"></i>Crear Nuevo Ticket
+                    </h5>
+                    <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+                </div>
+                <div class="modal-body">
+                    <div class="mb-3">
+                        <label for="subject" class="form-label fw-bold">Asunto</label>
+                        <input type="text" class="form-control" id="subject" name="subject" 
+                               placeholder="Descripción breve del problema" required>
+                    </div>
+                    <div class="row mb-3">
+                        <div class="col-md-6">
+                            <label for="department" class="form-label fw-bold">Departamento</label>
+                            <select class="form-select" id="department" name="department" required>
+                                <option value="IT Support">IT Support</option>
+                                <option value="RRHH">Recursos Humanos</option>
+                                <option value="Finanzas">Finanzas</option>
+                                <option value="Compras">Compras</option>
+                                <option value="Infraestructura">Infraestructura</option>
+                                <option value="Seguridad">Seguridad</option>
+                            </select>
+                        </div>
+                        <div class="col-md-6">
+                            <label for="priority" class="form-label fw-bold">Prioridad</label>
+                            <select class="form-select" id="priority" name="priority">
+                                <option value="normal" selected>Normal</option>
+                                <option value="high">Alta</option>
+                                <option value="critical">Crítica</option>
+                            </select>
+                        </div>
+                    </div>
+                    <div class="mb-3">
+                        <label for="description" class="form-label fw-bold">Descripción detallada</label>
+                        <textarea class="form-control" id="description" name="description" rows="4" 
+                                  placeholder="Describe el problema con el mayor detalle posible..." required></textarea>
+                    </div>
+                </div>
+                <div class="modal-footer">
+                    <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Cancelar</button>
+                    <button type="submit" class="btn btn-primary">
+                        <i class="fas fa-paper-plane me-2"></i>Enviar Ticket
+                    </button>
+                </div>
+            </form>
         </div>
     </div>
 </div>

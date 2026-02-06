@@ -1,0 +1,285 @@
+{% extends "analyst/base.html" %}
+
+{% block title %}Web Events - Analyst Console{% endblock %}
+
+{% block content %}
+<div class="d-flex justify-content-between align-items-center mb-4">
+    <h2><i class="fas fa-globe me-2 text-accent"></i>Web / HTTP Events</h2>
+    <div>
+        <a href="/export/http_logins" class="btn btn-export btn-sm me-2">
+            <i class="fas fa-download me-1"></i>Export Logins
+        </a>
+        <a href="/export/http_forbidden" class="btn btn-export btn-sm me-2">
+            <i class="fas fa-download me-1"></i>Export Forbidden
+        </a>
+        <button class="btn btn-outline-light btn-sm" onclick="location.reload()">
+            <i class="fas fa-sync-alt"></i>
+        </button>
+    </div>
+</div>
+
+<!-- Stats Row -->
+<div class="row g-3 mb-4">
+    <div class="col-md-3">
+        <div class="kpi-card">
+            <div class="kpi-value">{{ stats.total_attempts }}</div>
+            <div class="kpi-label">Login Attempts</div>
+        </div>
+    </div>
+    <div class="col-md-3">
+        <div class="kpi-card">
+            <div class="kpi-value">{{ stats.total_success }}</div>
+            <div class="kpi-label">Successful Logins</div>
+        </div>
+    </div>
+    <div class="col-md-3">
+        <div class="kpi-card">
+            <div class="kpi-value">{{ stats.total_forbidden }}</div>
+            <div class="kpi-label">Forbidden Access</div>
+        </div>
+    </div>
+    <div class="col-md-3">
+        <div class="kpi-card">
+            <div class="kpi-value">{{ stats.total_uploads }}</div>
+            <div class="kpi-label">File Uploads</div>
+        </div>
+    </div>
+</div>
+
+<div class="row g-4">
+    <!-- Timeline Chart -->
+    <div class="col-lg-8">
+        <div class="card">
+            <div class="card-header">
+                <i class="fas fa-chart-line me-2"></i>Event Timeline
+            </div>
+            <div class="card-body">
+                <div class="chart-container">
+                    <canvas id="timelineChart"></canvas>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <!-- Top IPs -->
+    <div class="col-lg-4">
+        <div class="card h-100">
+            <div class="card-header">
+                <i class="fas fa-network-wired me-2"></i>Top IPs
+            </div>
+            <div class="card-body p-0">
+                <table class="table table-hover mb-0">
+                    <thead>
+                        <tr>
+                            <th>IP</th>
+                            <th class="text-end">Count</th>
+                        </tr>
+                    </thead>
+                    <tbody>
+                        {% for item in tops.ips %}
+                        <tr>
+                            <td><code>{{ item.item }}</code></td>
+                            <td class="text-end">{{ item.count }}</td>
+                        </tr>
+                        {% else %}
+                        <tr>
+                            <td colspan="2" class="text-center text-muted">No data</td>
+                        </tr>
+                        {% endfor %}
+                    </tbody>
+                </table>
+            </div>
+        </div>
+    </div>
+</div>
+
+<div class="row g-4 mt-2">
+    <!-- Top Users -->
+    <div class="col-lg-4">
+        <div class="card h-100">
+            <div class="card-header"><i class="fas fa-user me-2"></i>Top Users</div>
+            <div class="card-body p-0">
+                <table class="table table-hover mb-0">
+                    <thead>
+                        <tr>
+                            <th>User</th>
+                            <th class="text-end">Count</th>
+                        </tr>
+                    </thead>
+                    <tbody>
+                        {% for item in tops.users %}
+                        <tr>
+                            <td><code>{{ item.item }}</code></td>
+                            <td class="text-end">{{ item.count }}</td>
+                        </tr>
+                        {% else %}
+                        <tr>
+                            <td colspan="2" class="text-center text-muted">No data</td>
+                        </tr>
+                        {% endfor %}
+                    </tbody>
+                </table>
+            </div>
+        </div>
+    </div>
+
+    <!-- Top Passwords -->
+    <div class="col-lg-4">
+        <div class="card h-100">
+            <div class="card-header"><i class="fas fa-key me-2"></i>Top Passwords</div>
+            <div class="card-body p-0">
+                <table class="table table-hover mb-0">
+                    <thead>
+                        <tr>
+                            <th>Password</th>
+                            <th class="text-end">Count</th>
+                        </tr>
+                    </thead>
+                    <tbody>
+                        {% for item in tops.passwords %}
+                        <tr>
+                            <td><code>{{ item.item }}</code></td>
+                            <td class="text-end">{{ item.count }}</td>
+                        </tr>
+                        {% else %}
+                        <tr>
+                            <td colspan="2" class="text-center text-muted">No data</td>
+                        </tr>
+                        {% endfor %}
+                    </tbody>
+                </table>
+            </div>
+        </div>
+    </div>
+
+    <!-- Forbidden Paths -->
+    <div class="col-lg-4">
+        <div class="card h-100">
+            <div class="card-header"><i class="fas fa-ban me-2"></i>Top Forbidden Paths</div>
+            <div class="card-body p-0">
+                <table class="table table-hover mb-0">
+                    <thead>
+                        <tr>
+                            <th>Path</th>
+                            <th class="text-end">Count</th>
+                        </tr>
+                    </thead>
+                    <tbody>
+                        {% for item in tops.forbidden_paths %}
+                        <tr>
+                            <td><code>{{ item.item }}</code></td>
+                            <td class="text-end">{{ item.count }}</td>
+                        </tr>
+                        {% else %}
+                        <tr>
+                            <td colspan="2" class="text-center text-muted">No data</td>
+                        </tr>
+                        {% endfor %}
+                    </tbody>
+                </table>
+            </div>
+        </div>
+    </div>
+</div>
+
+<!-- Events Table -->
+<div class="card mt-4">
+    <div class="card-header d-flex justify-content-between">
+        <span><i class="fas fa-list me-2"></i>Recent Events (Last 50)</span>
+    </div>
+    <div class="card-body p-0">
+        <div class="table-responsive" style="max-height: 400px; overflow-y: auto;">
+            <table class="table table-hover mb-0">
+                <thead>
+                    <tr>
+                        <th>Timestamp</th>
+                        <th>IP</th>
+                        <th>User</th>
+                        <th>Event</th>
+                        <th>Details</th>
+                    </tr>
+                </thead>
+                <tbody>
+                    {% for event in events %}
+                    <tr>
+                        <td><small class="text-muted">{{ event.ts[:19] if event.ts else 'N/A' }}</small></td>
+                        <td><code>{{ event.ip or 'N/A' }}</code></td>
+                        <td>{{ event.user or event.admin or 'N/A' }}</td>
+                        <td>
+                            {% if event.ua and event.pw %}
+                            <span class="badge bg-info">Login Attempt</span>
+                            {% elif event.role and 'action' not in event %}
+                            <span class="badge bg-success">Login Success</span>
+                            {% elif event.filename %}
+                            <span class="badge bg-primary">Upload</span>
+                            {% elif event.path %}
+                            <span class="badge bg-warning text-dark">Forbidden</span>
+                            {% elif event.ticket_id %}
+                            <span class="badge bg-secondary">Ticket</span>
+                            {% elif event.doc %}
+                            <span class="badge bg-info">Doc Access</span>
+                            {% elif event.action %}
+                            <span class="badge bg-danger">Admin Action</span>
+                            {% else %}
+                            <span class="badge bg-secondary">Event</span>
+                            {% endif %}
+                        </td>
+                        <td class="small text-muted">
+                            {% if event.pw %}pass={{ event.pw[:20] }}...{% endif %}
+                            {% if event.filename %}{{ event.filename }}{% endif %}
+                            {% if event.path %}{{ event.path }}{% endif %}
+                            {% if event.action %}{{ event.action }}{% endif %}
+                        </td>
+                    </tr>
+                    {% else %}
+                    <tr>
+                        <td colspan="5" class="text-center text-muted py-4">No events found</td>
+                    </tr>
+                    {% endfor %}
+                </tbody>
+            </table>
+        </div>
+    </div>
+</div>
+{% endblock %}
+
+{% block extra_scripts %}
+<script>
+    const hourlyData = {{ hourly | tojson | safe }};
+    const labels = Object.keys(hourlyData);
+    const values = Object.values(hourlyData);
+
+    const ctx = document.getElementById('timelineChart').getContext('2d');
+    new Chart(ctx, {
+        type: 'line',
+        data: {
+            labels: labels,
+            datasets: [{
+                label: 'Events',
+                data: values,
+                borderColor: '#e94560',
+                backgroundColor: 'rgba(233, 69, 96, 0.1)',
+                fill: true,
+                tension: 0.4
+            }]
+        },
+        options: {
+            responsive: true,
+            maintainAspectRatio: false,
+            plugins: {
+                legend: { display: false }
+            },
+            scales: {
+                x: {
+                    ticks: { color: 'rgba(255,255,255,0.5)' },
+                    grid: { color: 'rgba(255,255,255,0.05)' }
+                },
+                y: {
+                    ticks: { color: 'rgba(255,255,255,0.5)' },
+                    grid: { color: 'rgba(255,255,255,0.05)' }
+                }
+            }
+        }
+    });
+</script>
+{% endblock %}

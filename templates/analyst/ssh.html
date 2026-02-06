@@ -1,0 +1,280 @@
+{% extends "analyst/base.html" %}
+
+{% block title %}SSH Events - Analyst Console{% endblock %}
+
+{% block content %}
+<div class="d-flex justify-content-between align-items-center mb-4">
+    <h2><i class="fas fa-terminal me-2 text-accent"></i>SSH Events</h2>
+    <div>
+        <a href="/export/ssh_attempts" class="btn btn-export btn-sm me-2">
+            <i class="fas fa-download me-1"></i>Export Attempts
+        </a>
+        <a href="/export/ssh_commands" class="btn btn-export btn-sm me-2">
+            <i class="fas fa-download me-1"></i>Export Commands
+        </a>
+        <button class="btn btn-outline-light btn-sm" onclick="location.reload()">
+            <i class="fas fa-sync-alt"></i>
+        </button>
+    </div>
+</div>
+
+<!-- Stats Row -->
+<div class="row g-3 mb-4">
+    <div class="col-md-6">
+        <div class="kpi-card">
+            <div class="kpi-value">{{ stats.total_attempts }}</div>
+            <div class="kpi-label">Connection Attempts</div>
+        </div>
+    </div>
+    <div class="col-md-6">
+        <div class="kpi-card">
+            <div class="kpi-value">{{ stats.total_commands }}</div>
+            <div class="kpi-label">Commands Executed</div>
+        </div>
+    </div>
+</div>
+
+<div class="row g-4">
+    <!-- Timeline Chart -->
+    <div class="col-lg-8">
+        <div class="card">
+            <div class="card-header">
+                <i class="fas fa-chart-line me-2"></i>Activity Timeline
+            </div>
+            <div class="card-body">
+                <div class="chart-container">
+                    <canvas id="timelineChart"></canvas>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <!-- Top IPs -->
+    <div class="col-lg-4">
+        <div class="card h-100">
+            <div class="card-header">
+                <i class="fas fa-network-wired me-2"></i>Top IPs
+            </div>
+            <div class="card-body p-0">
+                <table class="table table-hover mb-0">
+                    <thead>
+                        <tr>
+                            <th>IP</th>
+                            <th class="text-end">Count</th>
+                        </tr>
+                    </thead>
+                    <tbody>
+                        {% for item in tops.ips %}
+                        <tr>
+                            <td><code>{{ item.item }}</code></td>
+                            <td class="text-end">{{ item.count }}</td>
+                        </tr>
+                        {% else %}
+                        <tr>
+                            <td colspan="2" class="text-center text-muted">No data</td>
+                        </tr>
+                        {% endfor %}
+                    </tbody>
+                </table>
+            </div>
+        </div>
+    </div>
+</div>
+
+<div class="row g-4 mt-2">
+    <!-- Top Users -->
+    <div class="col-lg-4">
+        <div class="card h-100">
+            <div class="card-header"><i class="fas fa-user me-2"></i>Top Users</div>
+            <div class="card-body p-0">
+                <table class="table table-hover mb-0">
+                    <thead>
+                        <tr>
+                            <th>User</th>
+                            <th class="text-end">Count</th>
+                        </tr>
+                    </thead>
+                    <tbody>
+                        {% for item in tops.users %}
+                        <tr>
+                            <td><code>{{ item.item }}</code></td>
+                            <td class="text-end">{{ item.count }}</td>
+                        </tr>
+                        {% else %}
+                        <tr>
+                            <td colspan="2" class="text-center text-muted">No data</td>
+                        </tr>
+                        {% endfor %}
+                    </tbody>
+                </table>
+            </div>
+        </div>
+    </div>
+
+    <!-- Top Passwords -->
+    <div class="col-lg-4">
+        <div class="card h-100">
+            <div class="card-header"><i class="fas fa-key me-2"></i>Top Passwords</div>
+            <div class="card-body p-0">
+                <table class="table table-hover mb-0">
+                    <thead>
+                        <tr>
+                            <th>Password</th>
+                            <th class="text-end">Count</th>
+                        </tr>
+                    </thead>
+                    <tbody>
+                        {% for item in tops.passwords %}
+                        <tr>
+                            <td><code>{{ item.item }}</code></td>
+                            <td class="text-end">{{ item.count }}</td>
+                        </tr>
+                        {% else %}
+                        <tr>
+                            <td colspan="2" class="text-center text-muted">No data</td>
+                        </tr>
+                        {% endfor %}
+                    </tbody>
+                </table>
+            </div>
+        </div>
+    </div>
+
+    <!-- Top Commands -->
+    <div class="col-lg-4">
+        <div class="card h-100">
+            <div class="card-header"><i class="fas fa-code me-2"></i>Top Commands</div>
+            <div class="card-body p-0">
+                <table class="table table-hover mb-0">
+                    <thead>
+                        <tr>
+                            <th>Command</th>
+                            <th class="text-end">Count</th>
+                        </tr>
+                    </thead>
+                    <tbody>
+                        {% for item in tops.commands %}
+                        <tr>
+                            <td><code>{{ item.item }}</code></td>
+                            <td class="text-end">{{ item.count }}</td>
+                        </tr>
+                        {% else %}
+                        <tr>
+                            <td colspan="2" class="text-center text-muted">No data</td>
+                        </tr>
+                        {% endfor %}
+                    </tbody>
+                </table>
+            </div>
+        </div>
+    </div>
+</div>
+
+<!-- Connection Attempts Table -->
+<div class="card mt-4">
+    <div class="card-header">
+        <i class="fas fa-plug me-2"></i>Recent Connection Attempts
+    </div>
+    <div class="card-body p-0">
+        <div class="table-responsive" style="max-height: 300px; overflow-y: auto;">
+            <table class="table table-hover mb-0">
+                <thead>
+                    <tr>
+                        <th>Timestamp</th>
+                        <th>IP</th>
+                        <th>User</th>
+                        <th>Password</th>
+                    </tr>
+                </thead>
+                <tbody>
+                    {% for event in attempts %}
+                    <tr>
+                        <td><small class="text-muted">{{ event.ts[:19] if event.ts else 'N/A' }}</small></td>
+                        <td><code>{{ event.ip or 'N/A' }}</code></td>
+                        <td>{{ event.user or 'N/A' }}</td>
+                        <td><code>{{ event.pw or 'N/A' }}</code></td>
+                    </tr>
+                    {% else %}
+                    <tr>
+                        <td colspan="4" class="text-center text-muted py-4">No attempts found</td>
+                    </tr>
+                    {% endfor %}
+                </tbody>
+            </table>
+        </div>
+    </div>
+</div>
+
+<!-- Commands Table -->
+<div class="card mt-4">
+    <div class="card-header">
+        <i class="fas fa-terminal me-2"></i>Recent Commands Executed
+    </div>
+    <div class="card-body p-0">
+        <div class="table-responsive" style="max-height: 300px; overflow-y: auto;">
+            <table class="table table-hover mb-0">
+                <thead>
+                    <tr>
+                        <th>Timestamp</th>
+                        <th>IP</th>
+                        <th>Command</th>
+                    </tr>
+                </thead>
+                <tbody>
+                    {% for event in commands %}
+                    <tr>
+                        <td><small class="text-muted">{{ event.ts[:19] if event.ts else 'N/A' }}</small></td>
+                        <td><code>{{ event.ip or 'N/A' }}</code></td>
+                        <td><code class="text-warning">{{ event.cmd or 'N/A' }}</code></td>
+                    </tr>
+                    {% else %}
+                    <tr>
+                        <td colspan="3" class="text-center text-muted py-4">No commands found</td>
+                    </tr>
+                    {% endfor %}
+                </tbody>
+            </table>
+        </div>
+    </div>
+</div>
+{% endblock %}
+
+{% block extra_scripts %}
+<script>
+    const hourlyData = {{ hourly | tojson | safe }};
+    const labels = Object.keys(hourlyData);
+    const values = Object.values(hourlyData);
+
+    const ctx = document.getElementById('timelineChart').getContext('2d');
+    new Chart(ctx, {
+        type: 'bar',
+        data: {
+            labels: labels,
+            datasets: [{
+                label: 'Events',
+                data: values,
+                backgroundColor: 'rgba(233, 69, 96, 0.7)',
+                borderColor: '#e94560',
+                borderWidth: 1
+            }]
+        },
+        options: {
+            responsive: true,
+            maintainAspectRatio: false,
+            plugins: {
+                legend: { display: false }
+            },
+            scales: {
+                x: {
+                    ticks: { color: 'rgba(255,255,255,0.5)' },
+                    grid: { color: 'rgba(255,255,255,0.05)' }
+                },
+                y: {
+                    ticks: { color: 'rgba(255,255,255,0.5)' },
+                    grid: { color: 'rgba(255,255,255,0.05)' }
+                }
+            }
+        }
+    });
+</script>
+{% endblock %}

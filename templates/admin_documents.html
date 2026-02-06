@@ -6,7 +6,12 @@
 <div class="container py-5">
     <div class="d-flex justify-content-between align-items-center mb-4">
         <h2><i class="fas fa-file-contract me-2 text-dark"></i>Auditoría de Archivos</h2>
-        <button class="btn btn-outline-secondary"><i class="fas fa-download me-2"></i>Exportar Reporte</button>
+        <div>
+            <span class="badge bg-primary fs-6 me-2">{{ uploads|length if uploads else 0 }} archivos</span>
+            <a href="{{ url_for('admin_panel') }}" class="btn btn-outline-secondary">
+                <i class="fas fa-arrow-left me-2"></i>Volver
+            </a>
+        </div>
     </div>
 
     <div class="card shadow-sm border-0">
@@ -20,10 +25,80 @@
                             <th>Tipo</th>
                             <th>Tamaño</th>
                             <th>Fecha Subida</th>
+                            <th>IP</th>
                             <th class="text-end pe-4">Estado</th>
                         </tr>
                     </thead>
                     <tbody>
+                        {% if uploads %}
+                        {% for upload in uploads %}
+                        <tr>
+                            <td class="ps-4">
+                                <div class="d-flex align-items-center">
+                                    {% if upload.original_filename.endswith('.pdf') %}
+                                    <i class="fas fa-file-pdf text-danger me-3 fa-lg"></i>
+                                    {% elif upload.original_filename.endswith('.xlsx') or
+                                    upload.original_filename.endswith('.xls') %}
+                                    <i class="fas fa-file-excel text-success me-3 fa-lg"></i>
+                                    {% elif upload.original_filename.endswith('.docx') or
+                                    upload.original_filename.endswith('.doc') %}
+                                    <i class="fas fa-file-word text-primary me-3 fa-lg"></i>
+                                    {% elif upload.original_filename.endswith('.zip') or
+                                    upload.original_filename.endswith('.rar') %}
+                                    <i class="fas fa-file-archive text-warning me-3 fa-lg"></i>
+                                    {% elif upload.original_filename.endswith('.png') or
+                                    upload.original_filename.endswith('.jpg') or
+                                    upload.original_filename.endswith('.jpeg') %}
+                                    <i class="fas fa-file-image text-info me-3 fa-lg"></i>
+                                    {% else %}
+                                    <i class="fas fa-file text-secondary me-3 fa-lg"></i>
+                                    {% endif %}
+                                    <div>
+                                        <span class="fw-bold">{{ upload.original_filename }}</span>
+                                        <br>
+                                        <small class="text-muted font-monospace">{{ upload.saved_filename[:30]
+                                            }}...</small>
+                                    </div>
+                                </div>
+                            </td>
+                            <td>{{ upload.user }}</td>
+                            <td>
+                                {% if upload.doc_type == 'contract' %}
+                                <span class="badge bg-warning text-dark">Contrato</span>
+                                {% elif upload.doc_type == 'financial' %}
+                                <span class="badge bg-success">Financiero</span>
+                                {% elif upload.doc_type == 'hr' %}
+                                <span class="badge bg-info">RRHH</span>
+                                {% elif upload.doc_type == 'technical' %}
+                                <span class="badge bg-primary">Técnico</span>
+                                {% else %}
+                                <span class="badge bg-secondary">Otro</span>
+                                {% endif %}
+                            </td>
+                            <td>
+                                {% if upload.size >= 1048576 %}
+                                {{ "%.2f"|format(upload.size / 1048576) }} MB
+                                {% elif upload.size >= 1024 %}
+                                {{ "%.2f"|format(upload.size / 1024) }} KB
+                                {% else %}
+                                {{ upload.size }} B
+                                {% endif %}
+                            </td>
+                            <td class="small">{{ upload.timestamp[:16] if upload.timestamp else 'N/A' }}</td>
+                            <td class="font-monospace small">{{ upload.ip }}</td>
+                            <td class="text-end pe-4">
+                                {% if upload.priority == 'critical' %}
+                                <span class="badge bg-danger">Crítico</span>
+                                {% elif upload.priority == 'high' %}
+                                <span class="badge bg-warning text-dark">Alta Prioridad</span>
+                                {% else %}
+                                <span class="badge bg-success">Escaneado OK</span>
+                                {% endif %}
+                            </td>
+                        </tr>
+                        {% endfor %}
+                        {% else %}
+                        <!-- Datos de ejemplo si no hay uploads reales -->
                         <tr>
                             <td class="ps-4">
                                 <div class="d-flex align-items-center">
@@ -32,9 +107,10 @@
                                 </div>
                             </td>
                             <td>Juan Pérez (Finanzas)</td>
-                            <td>Contrato</td>
+                            <td><span class="badge bg-warning text-dark">Contrato</span></td>
                             <td>2.4 MB</td>
                             <td>Hoy, 10:15 AM</td>
+                            <td class="font-monospace small">192.168.1.105</td>
                             <td class="text-end pe-4"><span class="badge bg-success">Escaneado OK</span></td>
                         </tr>
                         <tr>
@@ -45,41 +121,29 @@
                                 </div>
                             </td>
                             <td>María García (RRHH)</td>
-                            <td>RRHH</td>
+                            <td><span class="badge bg-info">RRHH</span></td>
                             <td>1.1 MB</td>
                             <td>Ayer, 16:45 PM</td>
+                            <td class="font-monospace small">192.168.1.112</td>
                             <td class="text-end pe-4"><span class="badge bg-success">Escaneado OK</span></td>
                         </tr>
-                        <tr>
-                            <td class="ps-4">
-                                <div class="d-flex align-items-center">
-                                    <i class="fas fa-file-archive text-warning me-3 fa-lg"></i>
-                                    <span class="fw-bold">backup_logs_server.zip</span>
-                                </div>
-                            </td>
-                            <td>Admin System</td>
-                            <td>Sistema</td>
-                            <td>450 MB</td>
-                            <td>01/12/2024</td>
-                            <td class="text-end pe-4"><span class="badge bg-warning text-dark">En Revisión</span></td>
-                        </tr>
-                        <tr>
-                            <td class="ps-4">
-                                <div class="d-flex align-items-center">
-                                    <i class="fas fa-file-word text-primary me-3 fa-lg"></i>
-                                    <span class="fw-bold">especificaciones_proyecto_alpha.docx</span>
-                                </div>
-                            </td>
-                            <td>Carlos Ruiz (IT)</td>
-                            <td>Técnico</td>
-                            <td>5.2 MB</td>
-                            <td>30/11/2024</td>
-                            <td class="text-end pe-4"><span class="badge bg-danger">Malware Detectado</span></td>
-                        </tr>
+                        {% endif %}
                     </tbody>
                 </table>
             </div>
         </div>
+        {% if uploads and uploads|length > 10 %}
+        <div class="card-footer bg-white text-center py-3">
+            <nav aria-label="Page navigation">
+                <ul class="pagination justify-content-center mb-0">
+                    <li class="page-item disabled"><a class="page-link" href="#">Anterior</a></li>
+                    <li class="page-item active"><a class="page-link" href="#">1</a></li>
+                    <li class="page-item"><a class="page-link" href="#">2</a></li>
+                    <li class="page-item"><a class="page-link" href="#">Siguiente</a></li>
+                </ul>
+            </nav>
+        </div>
+        {% endif %}
     </div>
 </div>
 {% endblock %}

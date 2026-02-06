@@ -13,49 +13,87 @@
                     <span class="badge bg-success">Activo</span>
                 </div>
                 <div class="card-body p-4">
+                    {% with messages = get_flashed_messages(with_categories=true) %}
+                    {% if messages %}
+                    {% for category, message in messages %}
+                    <div class="alert alert-{{ category if category != 'message' else 'info' }} alert-dismissible fade show"
+                        role="alert">
+                        {{ message }}
+                        <button type="button" class="btn-close" data-bs-dismiss="alert" aria-label="Close"></button>
+                    </div>
+                    {% endfor %}
+                    {% endif %}
+                    {% endwith %}
+
                     <div class="text-center mb-4">
                         <div class="avatar-placeholder bg-light rounded-circle mx-auto mb-3 d-flex align-items-center justify-content-center"
                             style="width: 100px; height: 100px;">
                             <i class="fas fa-user fa-3x text-secondary"></i>
                         </div>
-                        <h5 class="fw-bold">{{ session.get('username', 'Usuario') }}</h5>
-                        <p class="text-muted">Departamento de Finanzas</p>
+                        <h5 class="fw-bold">{{ session.get('name', session.get('username', 'Usuario')) }}</h5>
+                        <p class="text-muted">{{ session.get('dept', 'Departamento General') }}</p>
                     </div>
 
-                    <form>
+                    <form action="{{ url_for('profile') }}" method="POST">
                         <div class="row g-3">
                             <div class="col-md-6">
                                 <label class="form-label text-muted small">Nombre Completo</label>
-                                <input type="text" class="form-control" value="Juan Pérez García" readonly>
+                                <input type="text" class="form-control" name="full_name"
+                                    value="{{ session.get('name', 'Juan Pérez García') }}">
                             </div>
                             <div class="col-md-6">
                                 <label class="form-label text-muted small">ID Empleado</label>
-                                <input type="text" class="form-control" value="EMP-2024-8832" readonly>
-                            </div>
-                            <div class="col-md-6">
-                                <label class="form-label text-muted small">Email Corporativo</label>
-                                <input type="email" class="form-control" value="juan.perez@cybershield-fake.com"
+                                <input type="text" class="form-control" name="employee_id" value="EMP-2024-8832"
                                     readonly>
                             </div>
                             <div class="col-md-6">
-                                <label class="form-label text-muted small">Extensión Telefónica</label>
-                                <input type="text" class="form-control" value="2045" readonly>
+                                <label class="form-label text-muted small">Email Corporativo</label>
+                                <input type="email" class="form-control" name="email"
+                                    value="{{ session.get('username', 'usuario') }}@cybershield-fake.com">
                             </div>
                             <div class="col-md-6">
-                                <label class="form-label text-muted small">Último Acceso</label>
-                                <input type="text" class="form-control" value="Hoy, 09:00 AM" readonly>
+                                <label class="form-label text-muted small">Extensión Telefónica</label>
+                                <input type="text" class="form-control" name="phone_ext" value="2045">
+                            </div>
+                            <div class="col-md-6">
+                                <label class="form-label text-muted small">Departamento</label>
+                                <input type="text" class="form-control" name="department"
+                                    value="{{ session.get('dept', 'General') }}">
                             </div>
                             <div class="col-md-6">
                                 <label class="form-label text-muted small">Rol</label>
-                                <input type="text" class="form-control" value="Empleado" readonly>
+                                <input type="text" class="form-control" name="role"
+                                    value="{{ session.get('role', 'employee') | capitalize }}" readonly>
+                            </div>
+                        </div>
+
+                        <hr class="my-4">
+
+                        <h6 class="fw-bold mb-3"><i class="fas fa-lock me-2 text-warning"></i>Cambiar Contraseña</h6>
+                        <div class="row g-3">
+                            <div class="col-md-4">
+                                <label class="form-label text-muted small">Contraseña Actual</label>
+                                <input type="password" class="form-control" name="current_password"
+                                    placeholder="••••••••">
+                            </div>
+                            <div class="col-md-4">
+                                <label class="form-label text-muted small">Nueva Contraseña</label>
+                                <input type="password" class="form-control" name="new_password" placeholder="••••••••">
+                            </div>
+                            <div class="col-md-4">
+                                <label class="form-label text-muted small">Confirmar Contraseña</label>
+                                <input type="password" class="form-control" name="confirm_password"
+                                    placeholder="••••••••">
                             </div>
                         </div>
 
                         <hr class="my-4">
 
                         <div class="d-flex justify-content-end gap-2">
-                            <button type="button" class="btn btn-outline-secondary">Cambiar Contraseña</button>
-                            <button type="button" class="btn btn-primary">Editar Datos</button>
+                            <a href="{{ url_for('dashboard') }}" class="btn btn-outline-secondary">Cancelar</a>
+                            <button type="submit" class="btn btn-primary">
+                                <i class="fas fa-save me-2"></i>Guardar Cambios
+                            </button>
                         </div>
                     </form>
                 </div>

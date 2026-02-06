@@ -1,45 +1,134 @@
 {% extends "base.html" %}
 
-{% block title %}Logs del Sistema - Cybershield Solutions{% endblock %}
+{% block title %}SIEM - Vista Consolidada - Cybershield Solutions{% endblock %}
 
 {% block content %}
 <div class="container py-5">
+    {% if is_siem_limited %}
+    <!-- Banner de Vista Limitada SIEM -->
+    <div class="alert alert-warning border-0 shadow-sm mb-4" role="alert">
+        <div class="d-flex align-items-center">
+            <i class="fas fa-exclamation-triangle fa-2x me-3 text-warning"></i>
+            <div>
+                <h5 class="alert-heading mb-1">
+                    <i class="fas fa-shield-alt me-2"></i>Vista Limitada del SIEM
+                </h5>
+                <p class="mb-0 small">
+                    Algunos eventos se ocultan por políticas de retención y clasificación de seguridad.
+                    Para acceso completo, contacte con el equipo SOC (ext. 4455).
+                </p>
+            </div>
+        </div>
+    </div>
+    {% endif %}
+
     <div class="d-flex justify-content-between align-items-center mb-4">
-        <h2><i class="fas fa-list-alt me-2 text-dark"></i>Logs de Auditoría</h2>
+        <h2><i class="fas fa-shield-alt me-2 text-dark"></i>SIEM - Vista Consolidada</h2>
         <div>
-            <button class="btn btn-outline-dark me-2"><i class="fas fa-filter me-2"></i>Filtrar</button>
-            <button class="btn btn-dark"><i class="fas fa-download me-2"></i>Descargar Logs</button>
+            <button class="btn btn-outline-dark me-2" onclick="location.reload()">
+                <i class="fas fa-sync-alt me-2"></i>Refrescar
+            </button>
+            <a href="{{ url_for('admin_panel') }}" class="btn btn-dark">
+                <i class="fas fa-arrow-left me-2"></i>Volver
+            </a>
         </div>
     </div>
 
     <div class="card shadow-sm border-0 bg-dark text-light font-monospace">
-        <div class="card-header bg-secondary text-white border-bottom border-dark">
-            <i class="fas fa-terminal me-2"></i>/var/log/secure_audit.log
+        <div class="card-header bg-secondary text-white border-bottom border-dark d-flex justify-content-between">
+            <span><i class="fas fa-terminal me-2"></i>Eventos de Seguridad Consolidados</span>
+            <span class="badge bg-light text-dark">{{ log_entries|length if log_entries else 0 }} eventos
+                visibles</span>
         </div>
-        <div class="card-body p-3" style="max-height: 600px; overflow-y: auto;">
-            <div class="mb-1"><span class="text-muted">[2024-12-04 18:30:01]</span> <span class="text-info">INFO</span>:
-                SSH login successful for user 'admin' from 192.168.1.50</div>
-            <div class="mb-1"><span class="text-muted">[2024-12-04 18:28:45]</span> <span
-                    class="text-warning">WARN</span>: Failed password for invalid user 'root' from 45.33.22.11</div>
-            <div class="mb-1"><span class="text-muted">[2024-12-04 18:25:12]</span> <span class="text-info">INFO</span>:
-                Web session started for user 'j.perez' (Role: Employee)</div>
-            <div class="mb-1"><span class="text-muted">[2024-12-04 18:20:00]</span> <span
-                    class="text-success">SUCCESS</span>: File 'contrato_v3.pdf' uploaded by 'j.perez' (Size: 2.4MB)
+        <div class="card-body p-3" style="max-height: 700px; overflow-y: auto;">
+            {% if log_entries %}
+            {% for entry in log_entries %}
+            <div class="mb-1">
+                <!-- Timestamp -->
+                <span class="text-muted">[{{ entry[:19] }}]</span>
+
+                <!-- Tipo de evento con colores según severidad y tipo -->
+                {% if '[CRITICAL]' in entry %}
+                <span class="badge bg-danger">CRITICAL</span>
+                {% elif '[HIGH]' in entry %}
+                <span class="badge bg-warning text-dark">HIGH</span>
+                {% elif '[MEDIUM]' in entry %}
+                <span class="badge bg-info text-dark">MEDIUM</span>
+                {% elif '[LOW]' in entry %}
+                <span class="badge bg-secondary">LOW</span>
+                {% elif '[INFO]' in entry %}
+                <span class="badge bg-primary">INFO</span>
+                {% endif %}
+
+                <!-- Tipo de fuente -->
+                {% if 'WAF:' in entry %}
+                <span class="text-info">WAF</span>
+                {% elif 'EDR:' in entry %}
+                <span class="text-danger">EDR</span>
+                {% elif 'IAM:' in entry %}
+                <span class="text-success">IAM</span>
+                {% elif 'VPN:' in entry %}
+                <span class="text-primary">VPN</span>
+                {% elif 'FIREWALL:' in entry %}
+                <span class="text-warning">FW</span>
+                {% elif 'SIEM-CORRELATION:' in entry %}
+                <span class="text-danger fw-bold">SIEM</span>
+                {% endif %}
+
+                <!-- Contenido del log -->
+                <span class="text-light">{{ entry[20:] if entry|length > 20 else entry }}</span>
             </div>
-            <div class="mb-1"><span class="text-muted">[2024-12-04 18:15:33]</span> <span
-                    class="text-danger">CRITICAL</span>: Port scan detected from IP 10.0.0.55 - Blocked by firewall
+            {% endfor %}
+            {% else %}
+            <div class="text-center text-muted py-5">
+                <i class="fas fa-inbox fa-3x mb-3"></i>
+                <p>No hay eventos de seguridad disponibles</p>
             </div>
-            <div class="mb-1"><span class="text-muted">[2024-12-04 18:10:22]</span> <span class="text-info">INFO</span>:
-                System backup completed successfully (Duration: 45s)</div>
-            <div class="mb-1"><span class="text-muted">[2024-12-04 18:05:11]</span> <span class="text-info">INFO</span>:
-                Database connection pool refreshed</div>
-            <div class="mb-1"><span class="text-muted">[2024-12-04 18:00:00]</span> <span class="text-info">INFO</span>:
-                Cron job 'daily_report' executed</div>
-            <!-- More fake logs... -->
-            <div class="mb-1"><span class="text-muted">[2024-12-04 17:55:44]</span> <span
-                    class="text-warning">WARN</span>: High memory usage detected on worker-02 (85%)</div>
-            <div class="mb-1"><span class="text-muted">[2024-12-04 17:50:12]</span> <span class="text-info">INFO</span>:
-                User 'm.garcia' updated profile information</div>
+            {% endif %}
+        </div>
+        <div class="card-footer bg-secondary text-white small">
+            <i class="fas fa-info-circle me-2"></i>
+            Vista consolidada de eventos de seguridad. Datos sujetos a políticas de retención.
+            Última actualización: {{ now if now else 'N/A' }}
+        </div>
+    </div>
+
+    <div class="mt-4">
+        <div class="alert alert-info border-0">
+            <h6 class="alert-heading"><i class="fas fa-lightbulb me-2"></i>Leyenda de Fuentes SIEM</h6>
+            <div class="row">
+                <div class="col-md-4">
+                    <small>
+                        <span class="badge bg-info">WAF</span> Web Application Firewall<br>
+                        <span class="badge bg-danger">EDR</span> Endpoint Detection & Response<br>
+                    </small>
+                </div>
+                <div class="col-md-4">
+                    <small>
+                        <span class="badge bg-success">IAM</span> Identity & Access Management<br>
+                        <span class="badge bg-primary">VPN</span> Virtual Private Network<br>
+                    </small>
+                </div>
+                <div class="col-md-4">
+                    <small>
+                        <span class="badge bg-warning text-dark">FW</span> Firewall Perimetral<br>
+                        <span class="badge bg-danger">SIEM</span> Correlación de eventos<br>
+                    </small>
+                </div>
+            </div>
+            <hr class="my-2">
+            <div class="row">
+                <div class="col-12">
+                    <small class="text-muted">
+                        <strong>Severidades:</strong>
+                        <span class="badge bg-danger">CRITICAL</span>
+                        <span class="badge bg-warning text-dark">HIGH</span>
+                        <span class="badge bg-info text-dark">MEDIUM</span>
+                        <span class="badge bg-secondary">LOW</span>
+                        <span class="badge bg-primary">INFO</span>
+                    </small>
+                </div>
+            </div>
         </div>
     </div>
 </div>
