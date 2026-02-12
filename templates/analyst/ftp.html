@@ -273,7 +273,8 @@
 
 {% block extra_scripts %}
 <script>
-    const hourlyData = {{ hourly | tojson | safe }};
+
+    const hourlyData = {{ hourly | tojson | safe }}; // noinspection JSUnresolvedVariable
     const labels = Object.keys(hourlyData);
     const values = Object.values(hourlyData);
 
